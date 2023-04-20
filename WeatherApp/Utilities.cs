@@ -1,6 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.ApplicationModel;
 
 namespace WeatherApp
 {
@@ -78,6 +82,20 @@ namespace WeatherApp
         public static Dictionary<string, int> extractNlProvinceFromCity() 
         {
             return JsonConvert.DeserializeObject<Dictionary<string, int>>(Constant_Variables.NL_PROVINCE_JSON);
+        }
+
+        public async static Task<WeatherHistoricalData> extractHistoricalWeatherData()
+        {
+            var storageFile = await Package.Current.InstalledLocation.TryGetItemAsync("emmen_historical_weather.txt") as StorageFile;
+
+            string content = await FileIO.ReadTextAsync(storageFile);
+
+            Console.WriteLine("File content: ", content);
+
+            content.TrimStart('[');
+            content.TrimEnd(']');
+
+            return JsonConvert.DeserializeObject<WeatherHistoricalData>(content);
         }
     }
 }

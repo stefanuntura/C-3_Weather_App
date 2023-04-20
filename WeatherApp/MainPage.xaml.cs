@@ -26,5 +26,11 @@ namespace WeatherApp
         {
             this.InitializeComponent();
         }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("File processing started");
+            await Utilities.extractHistoricalWeatherData();
+        }
     }
 }
