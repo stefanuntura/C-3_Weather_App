@@ -26,5 +26,31 @@ namespace WeatherApp
         {
             this.InitializeComponent();
         }
+
+        private void NavigationView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            /*if (args.IsSettingsSelected)
+            {
+                //  to the app settings page
+                Frame.Navigate(typeof(SettingsPage));
+            }*//*
+            else
+            {*/
+                // Navigate to the selected page based on the Tag property
+            string tag = args.InvokedItemContainer.Tag.ToString();
+            switch (tag)
+            {
+                case "Map":
+                    Frame.Navigate(typeof(Map));
+                    break;
+                case "Details":
+                    Frame.Navigate(typeof(LibraryPage));
+                    break;
+                case "Forecast":
+                    Frame.Navigate(typeof(SettingsPage));
+                    break;
+            }
+            
+        }
     }
 }

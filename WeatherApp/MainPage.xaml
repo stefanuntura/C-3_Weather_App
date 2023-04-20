@@ -9,7 +9,29 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <TextBox HorizontalAlignment="Left" Height="94" Margin="47,64,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="502"/>
+        <TextBox HorizontalAlignment="Left" Height="94" Margin="47,64,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="502" />
+        <NavigationView x:Name="NavigationViewControl" IsBackButtonVisible="Collapsed">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Map" x:Name="Map" />
+                <NavigationViewItem Content="Details" x:Name="Details" />
+                <NavigationViewItem Content="5 Day Forecast" x:Name="Forecast" />
+                <NavigationViewItem Content="Historical Data" x:Name="Historical" />
+            </NavigationView.MenuItems>
+        </NavigationView>
 
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger
+                        MinWindowWidth="{x:Bind NavigationViewControl.CompactModeThresholdWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="NavigationViewControl.PaneDisplayMode" Value="Top"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
