@@ -9,13 +9,14 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <TextBox HorizontalAlignment="Left" Height="94" Margin="47,64,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="502" />
-        <NavigationView x:Name="NavigationViewControl" IsBackButtonVisible="Collapsed">
+        <NavigationView x:Name="NavigationViewControl" IsBackButtonVisible="Collapsed" ItemInvoked="NavigationView_ItemInvoked">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Map" x:Name="Map" />
-                <NavigationViewItem Content="Details" x:Name="Details" />
-                <NavigationViewItem Content="5 Day Forecast" x:Name="Forecast" />
-                <NavigationViewItem Content="Historical Data" x:Name="Historical" />
+                <TextBox x:Name="CitySearchBox" PlaceholderText="Search for a city" Width="200" KeyDown="CitySearchBox_KeyDown"/>
+                <NavigationViewItemSeparator/>
+                <NavigationViewItem Content="Map" x:Name="Map" Tag="Map"/>
+                <NavigationViewItem Content="Details" x:Name="Details" Tag="Details"/>
+                <NavigationViewItem Content="5 Day Forecast" x:Name="Forecast" Tag="Forecast"/>
+                <NavigationViewItem Content="Historical Data" x:Name="Historical" Tag="Historical"/>
             </NavigationView.MenuItems>
         </NavigationView>
 
@@ -33,5 +34,6 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+
     </Grid>
 </Page>
