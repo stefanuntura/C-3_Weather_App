@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -25,6 +26,11 @@ namespace WeatherApp
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            List<WeatherHistoricalData.Root> historicalData = await Utilities.extractHistoricalWeatherData();
         }
     }
 }
