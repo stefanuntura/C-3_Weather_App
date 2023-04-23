@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -36,56 +37,30 @@ namespace WeatherApp
         public const double currentLat = 47;
         public const double currentLon = -122;
 
+
         public MainPage()
         {
             this.InitializeComponent();
             weatherMap.MapServiceToken = bingAPIKey;
             weatherMap.Style = MapStyle.Road;
-
+            WeakReferenceMessenger.Default.Register<NavSearch>(this, OnSearchTermReceived);
             // Set the map zoom level to show the entire world
             weatherMap.ZoomLevel = 1;
         }
 
-        //TO DO: Figure out why two of the cases throw errors
-        private void NavigationView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        private void OnSearchTermReceived(object recipient, NavSearch message)
         {
-            if (args.IsSettingsInvoked)
-            {
-                //  to the app settings page
-                Frame.Navigate(typeof(Settings));
-            }
-            else
-            {
-                // Navigate to the selected page based on the Tag property
-                string tag = args.InvokedItemContainer.Tag.ToString();
-                switch (tag)
-                {
-                    case "Map":
-                        Frame.Navigate(typeof(Map));
-                        break;
-                    case "Details":
-                        Frame.Navigate(typeof(Details));
-                        break;
-                    case "Forecast":
-                        Frame.Navigate(typeof(Forecast));
-                        break;
-                    case "Historical":
-                        Frame.Navigate(typeof(Historical));
-                        break;
-                }
-
-            }
+            Global_Variables.cityName = message.SearchTerm;
+            SearchCity(Global_Variables.cityName);
         }
 
-        private void CitySearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (e.Key == VirtualKey.Enter)
-            {
-                SearchCity(CitySearchBox.Text.Trim());
-            }
+            List<WeatherHistoricalData.Root> historicalData = await Utilities.extractHistoricalWeatherData();
         }
 
-        private async void SearchCity(string cityName)
+
+        public async void SearchCity(string cityName)
         {
             // Use the OpenWeatherMap API to retrieve the geographic coordinates and current weather conditions for the city
             string apiUrl = $"https://api.openweathermap.org/data/2.5/weather?q={cityName}&units=metric&appid={owmAPIKey}";
@@ -141,7 +116,7 @@ namespace WeatherApp
                     weatherDescriptionBox.Text = $"The current weather in {cityName} is {weatherDescription}, with a temperature of {temperature} °C and a wind speed of {windSpeed} m/s.";
                     tempCurrentBox.Text = temperature.ToString();
                     windSpeedBox.Text = windSpeed.ToString();
-                   
+
                 }
                 else
                 {
@@ -151,11 +126,6 @@ namespace WeatherApp
                     await dialog.ShowAsync();
                 }
             }
-        }
-
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            List<WeatherHistoricalData.Root> historicalData = await Utilities.extractHistoricalWeatherData();
         }
     }
 }

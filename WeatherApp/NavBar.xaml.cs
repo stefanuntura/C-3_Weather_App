@@ -1,13 +1,19 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage.Streams;
 using Windows.System;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Maps;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
@@ -20,9 +26,25 @@ namespace WeatherApp
 {
     public sealed partial class NavBar : UserControl
     {
+        public event EventHandler<string> SearchTextChanged;
         public NavBar()
         {
             this.InitializeComponent();
+        }
+
+        private void CitySearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+            {
+                Global_Variables.cityName = CitySearchBox.Text.Trim();
+                var searchTerm = CitySearchBox.Text;
+                var message = new NavSearch { SearchTerm = searchTerm };
+                WeakReferenceMessenger.Default.Send(message);
+            }
+        }
+
+        private void CitySearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
         }
 
         private void NavigationView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -39,7 +61,7 @@ namespace WeatherApp
                 switch (tag)
                 {
                     case "Map":
-                        Frame.Navigate(typeof(Map));
+                        Frame.Navigate(typeof(MainPage));
                         break;
                     case "Details":
                         Frame.Navigate(typeof(Details));
@@ -52,15 +74,6 @@ namespace WeatherApp
                         break;
                 }
 
-            }
-        }
-
-        private void CitySearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == VirtualKey.Enter)
-            {
-                Console.WriteLine(CitySearchBox.Text);
-                //TO DO: Code to save city to global variable
             }
         }
     }
