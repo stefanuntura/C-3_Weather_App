@@ -9,7 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <local:MainPage Grid.Row="0"/>
+        <local:NavBar Grid.Row="0"/>
         <TextBlock HorizontalAlignment="Left" x:Name="HeaderText" Margin="10,10,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" FontWeight="Bold" Width="174" Text="Test"/>
 
         <Grid.RowDefinitions>

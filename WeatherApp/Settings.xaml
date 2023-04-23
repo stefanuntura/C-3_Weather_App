@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="WeatherApp.Settings"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,6 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <local:MainPage/>
+        <local:NavBar/>
     </Grid>
 </Page>
