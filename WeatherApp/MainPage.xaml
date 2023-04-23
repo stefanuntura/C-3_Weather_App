@@ -9,31 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <NavigationView x:Name="NavigationViewControl" IsBackButtonVisible="Collapsed" ItemInvoked="NavigationView_ItemInvoked">
-            <NavigationView.MenuItems>
-                <TextBox x:Name="CitySearchBox" PlaceholderText="Search for a city" Width="200" KeyDown="CitySearchBox_KeyDown"/>
-                <NavigationViewItemSeparator/>
-                <NavigationViewItem Content="Map" x:Name="Map" Tag="Map"/>
-                <NavigationViewItem Content="Details" x:Name="Details" Tag="Details"/>
-                <NavigationViewItem Content="5 Day Forecast" x:Name="Forecast" Tag="Forecast"/>
-                <NavigationViewItem Content="Historical Data" x:Name="Historical" Tag="Historical"/>
-            </NavigationView.MenuItems>
-        </NavigationView>
-
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger
-                        MinWindowWidth="{x:Bind NavigationViewControl.CompactModeThresholdWidth}" />
-                    </VisualState.StateTriggers>
-
-                    <VisualState.Setters>
-                        <Setter Target="NavigationViewControl.PaneDisplayMode" Value="Top"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-
+        <local:NavBar/>
     </Grid>
 </Page>

@@ -9,6 +9,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <local:MainPage/>
+        <local:NavBar/>
     </Grid>
 </Page>
