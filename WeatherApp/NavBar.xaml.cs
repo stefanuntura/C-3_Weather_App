@@ -61,7 +61,7 @@ namespace WeatherApp
                 switch (tag)
                 {
                     case "Map":
-                        Frame.Navigate(typeof(MainPage));
+                        Frame.Navigate(typeof(Map));
                         break;
                     case "Details":
                         Frame.Navigate(typeof(Details));
