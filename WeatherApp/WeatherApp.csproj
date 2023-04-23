@@ -116,6 +116,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ApiCalls.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -128,6 +129,8 @@
     <Compile Include="Historical.xaml.cs">
       <DependentUpon>Historical.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Constant_Variables.cs" />
+    <Compile Include="Global_Variables.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -138,6 +141,11 @@
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
+
+    <Compile Include="Utilities.cs" />
+    <Compile Include="WeatherData.cs" />
+    <Compile Include="WeatherForecastData.cs" />
+    <Compile Include="WeatherHistoricalData.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -145,6 +153,12 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="emmen_historical_weather.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="one_history.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

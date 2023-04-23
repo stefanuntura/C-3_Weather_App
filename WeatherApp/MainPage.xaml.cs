@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -150,6 +151,11 @@ namespace WeatherApp
                     await dialog.ShowAsync();
                 }
             }
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            List<WeatherHistoricalData.Root> historicalData = await Utilities.extractHistoricalWeatherData();
         }
     }
 }

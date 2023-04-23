@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Newtonsoft.Json;
 
 namespace WeatherApp
@@ -100,7 +99,7 @@ namespace WeatherApp
             return null;
         }
 
-        public static async Task<List<ReverseGeoLocation>> fetchGeoLocation()
+        /*public static async Task<List<ReverseGeoLocation>> fetchGeoLocation()
         {
             HttpClient client = new HttpClient();
 
@@ -133,7 +132,7 @@ namespace WeatherApp
             }
 
             return null;
-        }
+        }*/
 
         //Deserializes json response to WeatherData.Root class
         //Uses NewtonSoft.Json nugget package
@@ -152,10 +151,10 @@ namespace WeatherApp
             return JsonConvert.DeserializeObject<WeatherHistoricalData>(json);
         }
 
-        private static List<ReverseGeoLocation> parseGeoLocationJson(String json) 
+        /*private static List<ReverseGeoLocation> parseGeoLocationJson(String json) 
         {
             return JsonConvert.DeserializeObject <List<ReverseGeoLocation>>(json);
-        }
+        }*/
 
     }
 }
