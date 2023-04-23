@@ -30,16 +30,15 @@ namespace WeatherApp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        // TODO: move these to appropriate classes when rebased
-        public const string bingAPIKey = "auanlCtPy8GI2VO7KqPs~F4e-Om5LsRk5vQRoLBNfdQ~AggZV9E06diYWeqfAl3RiFQiivReb_Z3LOyp8tBw5VLRY8DSisSSJmWg4mJrmExR";
-        public const string owmAPIKey = "17004d86814c438ea51d196cf301efc0";
-        public const double currentLat = 47;
-        public const double currentLon = -122;
+         private Stopwatch stopwatch;
+
+        //Contains all current weather data information fetched from the API
+        private WeatherData.Root weatherData;
 
         public MainPage()
         {
             this.InitializeComponent();
-            weatherMap.MapServiceToken = bingAPIKey;
+            weatherMap.MapServiceToken = Constant_Variables.MAP_SERVICE_TOKEN;
             weatherMap.Style = MapStyle.Road;
 
             // Set the map zoom level to show the entire world
@@ -87,75 +86,121 @@ namespace WeatherApp
 
         private async void SearchCity(string cityName)
         {
-            // Use the OpenWeatherMap API to retrieve the geographic coordinates and current weather conditions for the city
-            string apiUrl = $"https://api.openweathermap.org/data/2.5/weather?q={cityName}&units=metric&appid={owmAPIKey}";
-
-            using (HttpClient httpClient = new HttpClient())
+            lock (Global_Variables.lockObj)
             {
-                HttpResponseMessage response = await httpClient.GetAsync(apiUrl);
-                if (response.IsSuccessStatusCode)
-                {
-                    string json = await response.Content.ReadAsStringAsync();
-
-                    // Deserialize the JSON data to a dynamic object
-                    dynamic data = JsonConvert.DeserializeObject(json);
-
-                    // Get the geographic coordinates of the city
-                    double latitude = data.coord.lat;
-                    double longitude = data.coord.lon;
-                    Geopoint cityLocation = new Geopoint(new BasicGeoposition { Latitude = latitude, Longitude = longitude });
-
-                    // Center the MapControl to the city location
-                    weatherMap.Center = cityLocation;
-                    weatherMap.ZoomLevel = 12;
-
-                    // Remove any existing MapIcons from the map
-                    var existingPins = weatherMap.MapElements.Where(x => x is MapIcon).ToList();
-                    foreach (var pin in existingPins)
-                    {
-                        weatherMap.MapElements.Remove(pin);
-                    }
-
-                    // Get the weather icon code and use it to construct the URL of the weather icon image
-                    string weatherIcon = data.weather[0].icon;
-                    string weatherIconUrl = $"http://openweathermap.org/img/w/{weatherIcon}.png";
-
-                    // Create a new MapIcon to represent the city location and current weather conditions
-                    var mapIcon = new MapIcon
-                    {
-                        Location = cityLocation,
-                        Title = cityName,
-                        NormalizedAnchorPoint = new Point(0.5, 1.0),
-                        Image = RandomAccessStreamReference.CreateFromUri(new Uri(weatherIconUrl))
-                    };
-
-                    // Add the MapIcon to the MapControl
-                    weatherMap.MapElements.Add(mapIcon);
-
-                    // Get the current weather conditions for the city
-                    string weatherDescription = data.weather[0].description;
-                    double temperature = data.main.temp;
-                    double windSpeed = data.wind.speed;
-
-                    // Display the weather information in a message box (or any other UI element)
-                    weatherDescriptionBox.Text = $"The current weather in {cityName} is {weatherDescription}, with a temperature of {temperature} °C and a wind speed of {windSpeed} m/s.";
-                    tempCurrentBox.Text = temperature.ToString();
-                    windSpeedBox.Text = windSpeed.ToString();
-                   
-                }
-                else
-                {
-                    // Display an error message if the API request fails
-                    string errorMessage = $"Could not retrieve weather information for {cityName}. Please check spelling or search a valid city.";
-                    MessageDialog dialog = new MessageDialog(errorMessage);
-                    await dialog.ShowAsync();
-                }
+                Global_Variables.cityName = cityName;
             }
+
+            weatherData = await ApiCalls.fetchCurrentWeather();
+
+            if (weatherData != null)
+            {
+
+                Geopoint cityLocation = new Geopoint(new BasicGeoposition { Latitude = weatherData.coord.lat, Longitude = weatherData.coord.lon });
+
+                // Center the MapControl to the city location
+                weatherMap.Center = cityLocation;
+                weatherMap.ZoomLevel = 12;
+
+                // Remove any existing MapIcons from the map
+                var existingPins = weatherMap.MapElements.Where(x => x is MapIcon).ToList();
+                foreach (var pin in existingPins)
+                {
+                    weatherMap.MapElements.Remove(pin);
+                }
+
+                // Get the weather icon code and use it to construct the URL of the weather icon image
+                
+               /* string weatherIcon = "";
+
+                foreach (var item in weatherData.weather)
+                {
+                    weatherIcon = item.icon;
+                }
+
+                // Create a new MapIcon to represent the city location and current weather conditions
+                var mapIcon = new MapIcon
+                {
+                    Location = cityLocation,
+                    Title = cityName,
+                    NormalizedAnchorPoint = new Point(0.5, 1.0),
+                    Image = RandomAccessStreamReference.CreateFromUri(new Uri(Utilities.prepareWeatherIconUrl(weatherIcon)))
+                };*/
+
+                // Add the MapIcon to the MapControl
+                weatherMap.MapElements.Add(GetMapIcon(cityLocation, cityName));
+
+                setLabels();
+
+            }
+            else
+            {
+                // Display an error message if the API request fails
+                string errorMessage = $"Could not retrieve weather information for {cityName}. Please check spelling or search a valid city.";
+                MessageDialog dialog = new MessageDialog(errorMessage);
+                await dialog.ShowAsync();
+            }
+            
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             List<WeatherHistoricalData.Root> historicalData = await Utilities.extractHistoricalWeatherData();
         }
+
+        private void setLabels()
+        {
+            //sets labels
+
+            string weatherDescription = "";
+
+            foreach (var item in weatherData.weather)
+            {
+                weatherDescription = item.description;
+            }
+
+            // dateAndTimeNL.Text = Utilities.unixTimeStampToDate(weatherData.dt);
+
+            //temp
+            tempCurrentBox.Text = weatherData.main.temp.ToString().Substring(0, 2) + (Global_Variables.units == "metric" ? "°C" : "°F");
+            tempMinMaxBox.Text = weatherData.main.temp_min.ToString().Substring(0, 2) + " / " + weatherData.main.temp_max.ToString() + (Global_Variables.units == "metric" ? "°C" : "°F");
+            tempFeelsLikeBox.Text = weatherData.main.feels_like.ToString().Substring(0, 2) + (Global_Variables.units == "metric" ? "°C" : "°F");
+
+            //wind
+            windSpeedBox.Text = weatherData.wind.speed.ToString() + " " + (Global_Variables.units == "metric" ? "m/s" : "mi/h");
+            windGustBox.Text = weatherData.wind.gust.ToString() + " " + (Global_Variables.units == "metric" ? "m/s" : "mi/h");
+            windDegreesBox.Text = weatherData.wind.deg.ToString() + "°";
+
+            //pressure
+            pressureCurrentBox.Text = weatherData.main.pressure.ToString() + " hPa";
+
+            //humidity
+            humidityCurrentBox.Text = weatherData.main.humidity.ToString() + "%";
+
+            //description
+            weatherDescriptionBox.Text = $"The current weather in {Global_Variables.cityName} is {weatherDescription}, with a temperature of {tempCurrentBox.Text} and a wind speed of {windSpeedBox.Text}.";
+        }
+
+        private MapIcon GetMapIcon(Geopoint cityLocation, string cityName) 
+        {
+            string weatherIcon = "";
+
+            foreach (var item in weatherData.weather)
+            {
+                weatherIcon = item.icon;
+            }
+
+            // Create a new MapIcon to represent the city location and current weather conditions
+            MapIcon mapIcon = new MapIcon
+            {
+                Location = cityLocation,
+                Title = cityName,
+                NormalizedAnchorPoint = new Point(0.5, 1.0),
+                Image = RandomAccessStreamReference.CreateFromUri(new Uri(Utilities.prepareWeatherIconUrl(weatherIcon)))
+            };
+
+            return mapIcon;
+        }
+
     }
 }

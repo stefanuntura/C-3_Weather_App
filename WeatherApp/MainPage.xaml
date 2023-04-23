@@ -65,13 +65,13 @@
                     <TextBox x:Name="pressureCurrentLabel" HorizontalAlignment="Left" Margin="10,86,0,0" TextWrapping="Wrap" Text="Current:" VerticalAlignment="Top" Height="32" Grid.Column="2" BorderThickness="0,0,0,0"/>
                     <TextBox x:Name="humidityCurrentLabel" HorizontalAlignment="Left" Margin="10,86,0,0" TextWrapping="Wrap" Text="Current:" VerticalAlignment="Top" Height="32" Grid.Column="3" BorderThickness="0,0,0,0"/>
                     <TextBox x:Name="tempCurrentBox" HorizontalAlignment="Left" Margin="142,42,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="32" BorderThickness="0,0,0,0" PlaceholderText="-"/>
-                    <TextBox x:Name="tempDeelsLikeBox" HorizontalAlignment="Left" Margin="142,86,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" BorderThickness="0,0,0,0" PlaceholderText="-"/>
+                    <TextBox x:Name="tempFeelsLikeBox" HorizontalAlignment="Left" Margin="142,86,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" BorderThickness="0,0,0,0" PlaceholderText="-"/>
                     <TextBox x:Name="tempMinMaxBox" HorizontalAlignment="Left" Margin="142,131,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" BorderThickness="0,0,0,0" Width="90" PlaceholderText="- / -"/>
                     <TextBox x:Name="windSpeedBox" HorizontalAlignment="Left" Margin="133,42,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="32" BorderThickness="0,0,0,0" PlaceholderText="-" Grid.Column="1"/>
                     <TextBox x:Name="windGustBox" HorizontalAlignment="Left" Margin="133,86,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="32" BorderThickness="0,0,0,0" PlaceholderText="-" Grid.Column="1"/>
                     <TextBox x:Name="windDegreesBox" HorizontalAlignment="Left" Margin="133,131,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="32" BorderThickness="0,0,0,0" PlaceholderText="-" Grid.Column="1"/>
                     <TextBox x:Name="pressureCurrentBox" HorizontalAlignment="Left" Margin="99,86,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="32" BorderThickness="0,0,0,0" PlaceholderText="-" Grid.Column="2"/>
-                    <TextBox x:Name="humidityCurrent" HorizontalAlignment="Left" Margin="98,86,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="32" BorderThickness="0,0,0,0" PlaceholderText="-" Grid.Column="3"/>
+                    <TextBox x:Name="humidityCurrentBox" HorizontalAlignment="Left" Margin="98,86,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="32" BorderThickness="0,0,0,0" PlaceholderText="-" Grid.Column="3"/>
                 </Grid>
             </StackPanel>
 

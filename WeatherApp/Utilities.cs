@@ -39,6 +39,13 @@ namespace WeatherApp
             return preparedUrl;
         }
 
+        public static string prepareWeatherIconUrl(string iconId) 
+        {
+            string preparedurl = String.Format(Constant_Variables.API_URL_ICON, iconId);
+
+            return preparedurl;
+        }
+
         public static String unixTimeStampToDate(double unixTimeStamp)
         {
             // Unix timestamp is seconds past epoch
