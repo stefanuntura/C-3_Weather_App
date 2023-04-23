@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.ApplicationModel;
+using System.Diagnostics;
 
 namespace WeatherApp
 {
@@ -84,18 +85,13 @@ namespace WeatherApp
             return JsonConvert.DeserializeObject<Dictionary<string, int>>(Constant_Variables.NL_PROVINCE_JSON);
         }
 
-        public async static Task<WeatherHistoricalData> extractHistoricalWeatherData()
+        public async static Task<List<WeatherHistoricalData.Root>> extractHistoricalWeatherData()
         {
             var storageFile = await Package.Current.InstalledLocation.TryGetItemAsync("emmen_historical_weather.txt") as StorageFile;
 
             string content = await FileIO.ReadTextAsync(storageFile);
 
-            Console.WriteLine("File content: ", content);
-
-            content.TrimStart('[');
-            content.TrimEnd(']');
-
-            return JsonConvert.DeserializeObject<WeatherHistoricalData>(content);
+            return JsonConvert.DeserializeObject<List<WeatherHistoricalData.Root>>(content);
         }
     }
 }
