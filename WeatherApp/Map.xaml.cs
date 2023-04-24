@@ -88,9 +88,9 @@ namespace WeatherApp
             // dateAndTimeNL.Text = Utilities.unixTimeStampToDate(weatherData.dt);
 
             //temp
-            tempCurrentBox.Text = weatherData.main.temp.ToString().Substring(0, 2) + (Global_Variables.units == "metric" ? "°C" : "°F");
-            tempMinMaxBox.Text = weatherData.main.temp_min.ToString().Substring(0, 2) + " / " + weatherData.main.temp_max.ToString().Substring(0, 2) + (Global_Variables.units == "metric" ? "°C" : "°F");
-            tempFeelsLikeBox.Text = weatherData.main.feels_like.ToString().Substring(0, 2) + (Global_Variables.units == "metric" ? "°C" : "°F");
+            tempCurrentBox.Text = weatherData.main.temp.ToString().Substring(0, 1) + (Global_Variables.units == "metric" ? "°C" : "°F");
+            tempMinMaxBox.Text = weatherData.main.temp_min.ToString().Substring(0, 1) + " / " + weatherData.main.temp_max.ToString().Substring(0, 1) + (Global_Variables.units == "metric" ? "°C" : "°F");
+            tempFeelsLikeBox.Text = weatherData.main.feels_like.ToString().Substring(0, 1) + (Global_Variables.units == "metric" ? "°C" : "°F");
 
             //wind
             windSpeedBox.Text = weatherData.wind.speed.ToString() + " " + (Global_Variables.units == "metric" ? "m/s" : "mi/h");
