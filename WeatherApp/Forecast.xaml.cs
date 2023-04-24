@@ -68,6 +68,7 @@ namespace WeatherApp
                 if (blockList != null)
                 {
                     blockList[0].Text = Math.Round(weather.main.temp).ToString() + (Global_Variables.units == "metric" ? "\u2103" : "\u2109");
+                    blockList[1].Text = weather.weather[0].description;
                 }
             }
         }
@@ -80,18 +81,23 @@ namespace WeatherApp
             {
                 case 0:
                     list.Add(OneTemp);
+                    list.Add(OneDesc);
                     return list;
                 case 1:
                     list.Add(TwoTemp);
+                    list.Add(TwoDesc);
                     return list;
                 case 2:
                     list.Add(ThreeTemp);
+                    list.Add(ThreeDesc);
                     return list;
                 case 3:
                     list.Add(FourTemp);
+                    list.Add(FourDesc);
                     return list;
                 case 4:
                     list.Add(FiveTemp);
+                    list.Add(FiveDesc);
                     return list;
             }
             return list;

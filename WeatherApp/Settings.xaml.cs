@@ -39,5 +39,8 @@ namespace WeatherApp
             myToggleButton.Content = "Fahrenheit";
             Global_Variables.units = "imperial";
         }
+
+        //TO DO: Add multithreading button functionality
+
     }
 }
