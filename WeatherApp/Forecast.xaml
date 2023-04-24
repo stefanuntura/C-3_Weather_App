@@ -35,6 +35,7 @@
                 <CompositeTransform Rotation="0"/>
             </TextBlock.RenderTransform>
         </TextBlock>
+        
         <Rectangle Grid.Column="1" Canvas.ZIndex="0"  Fill="LightGray" Width="280" RadiusX="50"
            RadiusY="50" Margin="10,57,10,10" Grid.RowSpan="4" Grid.Row="1" />
         <Rectangle Canvas.ZIndex="0"  Fill="LightGray" Width="280" RadiusX="50"
@@ -45,6 +46,12 @@
             RadiusY="50" Margin="10,58,10,10" Grid.RowSpan="4" Grid.Row="1" />
         <Rectangle Grid.Column="4" Canvas.ZIndex="0"  Fill="LightGray" Width="280" RadiusX="50"
             RadiusY="50" Margin="10,58,10,10" Grid.RowSpan="4" Grid.Row="1" />
+
+        <TextBlock HorizontalAlignment="Left" Canvas.ZIndex="1" x:Name="OneDesc" Margin="118,84,0,0" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Height="59" FontSize="40" FontFamily="Calibri" FontWeight="Bold" Width="85" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Column="4" Grid.Row="1">
+            <TextBlock.RenderTransform>
+                <CompositeTransform Rotation="0"/>
+            </TextBlock.RenderTransform>
+        </TextBlock>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition />

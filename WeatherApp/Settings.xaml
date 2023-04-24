@@ -10,5 +10,9 @@
 
     <Grid>
         <local:NavBar/>
+        <ToggleButton x:Name="myToggleButton" Content="Celsius" Width="157" Height="32" IsChecked="True" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Margin="36,161,0,0" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Height="38" Margin="36,85,0,0" TextWrapping="Wrap" Foreground="#2c2e2c" FontSize="28" FontFamily="Calibri" FontWeight="Bold" Text="Select Temperature Scale" VerticalAlignment="Top" Width="422"/>
+        <TextBlock HorizontalAlignment="Left" Height="38" Margin="36,119,0,0" TextWrapping="Wrap" Foreground="#2c2e2c" FontSize="18" FontFamily="Calibri" Text="Toggle button to switch between Fahrenheit and Celsius" VerticalAlignment="Top" Width="422"/>
+
     </Grid>
 </Page>

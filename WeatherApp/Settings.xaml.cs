@@ -26,5 +26,18 @@ namespace WeatherApp
         {
             this.InitializeComponent();
         }
+
+        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            myToggleButton.Content = "Celsius";
+            Global_Variables.units = "metric";
+
+        }
+
+        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            myToggleButton.Content = "Fahrenheit";
+            Global_Variables.units = "imperial";
+        }
     }
 }
