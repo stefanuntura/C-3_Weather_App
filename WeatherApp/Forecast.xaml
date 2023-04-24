@@ -9,28 +9,75 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+
+        <!-- NavBar UserControl implementation -->
+        
         <local:NavBar Grid.ColumnSpan="5"/>
-        <TextBlock HorizontalAlignment="Left" x:Name="HeaderText" Margin="124,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" FontWeight="Bold" Width="65" Text="Test" RenderTransformOrigin="0.5,0.5">
+
+        <!-- Main Temperature TextBlocks -->
+        
+        <TextBlock HorizontalAlignment="Left" Canvas.ZIndex="1" x:Name="OneTemp" Margin="103,83,0,0" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Height="59" FontSize="40" FontFamily="Calibri" FontWeight="Bold" Width="85" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
             <TextBlock.RenderTransform>
                 <CompositeTransform Rotation="0"/>
             </TextBlock.RenderTransform>
         </TextBlock>
-        <TextBlock HorizontalAlignment="Left" x:Name="HeaderText_Copy" Margin="124,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" FontWeight="Bold" Width="65" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Column="2">
+        <TextBlock HorizontalAlignment="Left" Canvas.ZIndex="1" x:Name="ThreeTemp" Margin="117,83,0,0" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Height="59" FontSize="40" FontFamily="Calibri" FontWeight="Bold" Width="85" Text="Test" RenderTransformOrigin="0.5,0.5"  Grid.Column="2" Grid.Row="1">
             <TextBlock.RenderTransform>
                 <CompositeTransform Rotation="0"/>
             </TextBlock.RenderTransform>
         </TextBlock>
-        <TextBlock HorizontalAlignment="Left" x:Name="HeaderText_Copy1" Margin="124,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" FontWeight="Bold" Width="65" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Column="1">
+        <TextBlock HorizontalAlignment="Left" Canvas.ZIndex="1" x:Name="TwoTemp" Margin="106,83,0,0" TextWrapping="Wrap"  TextAlignment="Center" VerticalAlignment="Top" Height="59" FontSize="40" FontFamily="Calibri" FontWeight="Bold" Width="85" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Column="1" Grid.Row="1">
             <TextBlock.RenderTransform>
                 <CompositeTransform Rotation="0"/>
             </TextBlock.RenderTransform>
         </TextBlock>
-        <TextBlock HorizontalAlignment="Left" x:Name="HeaderText_Copy2" Margin="124,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" FontWeight="Bold" Width="65" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Column="3">
+        <TextBlock HorizontalAlignment="Left" Canvas.ZIndex="1" x:Name="FourTemp" Margin="117,84,0,0" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Height="59" FontSize="40" FontFamily="Calibri" FontWeight="Bold" Width="85" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Column="3" Grid.Row="1">
             <TextBlock.RenderTransform>
                 <CompositeTransform Rotation="0"/>
             </TextBlock.RenderTransform>
         </TextBlock>
-        <TextBlock HorizontalAlignment="Left" x:Name="HeaderText_Copy3" Margin="137,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" FontWeight="Bold" Width="65" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Column="4">
+        <TextBlock HorizontalAlignment="Left" Canvas.ZIndex="1" x:Name="FiveTemp" Margin="118,84,0,0" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Height="59" FontSize="40" FontFamily="Calibri" FontWeight="Bold" Width="85" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Column="4" Grid.Row="1">
+            <TextBlock.RenderTransform>
+                <CompositeTransform Rotation="0"/>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+
+        <!-- Background Rectangles-->
+
+        <Rectangle Grid.Column="1" Canvas.ZIndex="0"  Fill="LightGray" Width="280" RadiusX="50"
+           RadiusY="50" Margin="10,57,10,10" Grid.RowSpan="4" Grid.Row="1" />
+        <Rectangle Canvas.ZIndex="0"  Fill="LightGray" Width="280" RadiusX="50"
+            RadiusY="50" Margin="10,58,10,10" Grid.RowSpan="4" Grid.Row="1" />
+        <Rectangle Grid.Column="2" Canvas.ZIndex="0"  Fill="LightGray" Width="280" RadiusX="50"
+            RadiusY="50" Margin="10,58,10,10" Grid.RowSpan="4" Grid.Row="1" />
+        <Rectangle Grid.Column="3" Canvas.ZIndex="0"  Fill="LightGray" Width="280" RadiusX="50"
+            RadiusY="50" Margin="10,58,10,10" Grid.RowSpan="4" Grid.Row="1" />
+        <Rectangle Grid.Column="4" Canvas.ZIndex="0"  Fill="LightGray" Width="280" RadiusX="50"
+            RadiusY="50" Margin="10,58,10,10" Grid.RowSpan="4" Grid.Row="1" />
+
+        <!-- Description TextBlocks -->
+        
+        <TextBlock HorizontalAlignment="Left" Canvas.ZIndex="1" x:Name="OneDesc" Margin="55,0,0,0" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Height="59" FontSize="25" FontFamily="Calibri" FontWeight="Bold" Width="181" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Row="2">
+            <TextBlock.RenderTransform>
+                <CompositeTransform Rotation="0"/>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Center" Canvas.ZIndex="1" x:Name="TwoDesc" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Height="59" FontSize="25" FontFamily="Calibri" FontWeight="Bold" Width="181" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Row="2" Grid.Column="1">
+            <TextBlock.RenderTransform>
+                <CompositeTransform Rotation="0"/>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Left" Canvas.ZIndex="1" x:Name="ThreeDesc" Margin="69,0,0,0" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Height="59" FontSize="25" FontFamily="Calibri" FontWeight="Bold" Width="181" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Row="2" Grid.Column="2">
+            <TextBlock.RenderTransform>
+                <CompositeTransform Rotation="0"/>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Left" Canvas.ZIndex="1" x:Name="FourDesc" Margin="70,0,0,0" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Height="59" FontSize="25" FontFamily="Calibri" FontWeight="Bold" Width="181" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Row="2" Grid.Column="3">
+            <TextBlock.RenderTransform>
+                <CompositeTransform Rotation="0"/>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Left" Canvas.ZIndex="1" x:Name="FiveDesc" Margin="71,0,0,0" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Height="59" FontSize="25" FontFamily="Calibri" FontWeight="Bold" Width="181" Text="Test" RenderTransformOrigin="0.5,0.5" Grid.Row="2" Grid.Column="4">
             <TextBlock.RenderTransform>
                 <CompositeTransform Rotation="0"/>
             </TextBlock.RenderTransform>
@@ -43,6 +90,15 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
     </Grid>
 </Page>

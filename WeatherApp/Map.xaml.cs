@@ -31,8 +31,11 @@ namespace WeatherApp
 
         private void OnSearchTermReceived(object recipient, NavSearch message)
         {
-            Global_Variables.cityName = message.SearchTerm;
-            SearchCity(Global_Variables.cityName);
+            lock (Global_Variables.lockObj)
+            {
+                Global_Variables.cityName = message.SearchTerm;
+                SearchCity(Global_Variables.cityName);
+            }
         }
         private async void SearchCity(string cityName)
         {

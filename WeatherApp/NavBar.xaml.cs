@@ -20,7 +20,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Die Elementvorlage "Benutzersteuerelement" wird unter https://go.microsoft.com/fwlink/?LinkId=234236 dokumentiert.
 
 namespace WeatherApp
 {
@@ -32,6 +31,7 @@ namespace WeatherApp
             this.InitializeComponent();
         }
 
+        // Event for when enter is pressed in the search bar 
         private void CitySearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Enter)
@@ -43,10 +43,7 @@ namespace WeatherApp
             }
         }
 
-        private void CitySearchBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-        }
-
+        // Page navigation for the NavBar tabs
         private void NavigationView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             if (args.IsSettingsInvoked)
