@@ -36,11 +36,17 @@ namespace WeatherApp
         public MainPage()
         {
             this.InitializeComponent();
+
+            // Subscribe to the HidePageElements message
+            WeakReferenceMessenger.Default.Register<HidePageElements>(this, OnHidePageElementsMessageReceived);
+
+
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void OnHidePageElementsMessageReceived(object recipient, HidePageElements message)
         {
-            List<WeatherHistoricalData.Root> historicalData = await Utilities.extractHistoricalWeatherData();
+            // Hide the grid
+            MainContentGrid.Visibility = Visibility.Collapsed;
         }
     }
 }

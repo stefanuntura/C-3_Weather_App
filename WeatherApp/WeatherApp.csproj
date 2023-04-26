@@ -120,12 +120,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Details.xaml.cs">
-      <DependentUpon>Details.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Forecast.xaml.cs">
       <DependentUpon>Forecast.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HidePageElements.cs" />
     <Compile Include="Historical.xaml.cs">
       <DependentUpon>Historical.xaml</DependentUpon>
     </Compile>
@@ -176,10 +174,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Details.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Forecast.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

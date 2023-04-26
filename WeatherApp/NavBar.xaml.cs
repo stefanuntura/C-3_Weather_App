@@ -13,7 +13,6 @@ namespace WeatherApp
     {
         public event EventHandler<string> SearchTextChanged;
         private int currentNavItemIndex = 0;
-        public NavigationCacheMode NavigationCacheMode { get; set; }
 
         public NavBar()
         {
@@ -50,7 +49,12 @@ namespace WeatherApp
             {
                 string tag = args.InvokedItemContainer.Tag.ToString();
                 NavigateToPageWithTag(tag, effect);
+
+                // Send the HideGridMessage message
+                WeakReferenceMessenger.Default.Send(new HidePageElements());
             }
+
+
         }
 
         // Determines the transition effect
@@ -80,9 +84,6 @@ namespace WeatherApp
                 case "Map":
                     Frame.Navigate(typeof(Map), null, new SlideNavigationTransitionInfo() { Effect = effect });
                     break;
-                case "Details":
-                    Frame.Navigate(typeof(Details), null, new SlideNavigationTransitionInfo() { Effect = effect });
-                    break;
                 case "Forecast":
                     Frame.Navigate(typeof(Forecast), null, new SlideNavigationTransitionInfo() { Effect = effect });
                     break;
@@ -91,5 +92,6 @@ namespace WeatherApp
                     break;
             }
         }
+
     }
 }

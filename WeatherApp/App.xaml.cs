@@ -32,6 +32,8 @@ namespace WeatherApp
             this.Suspending += OnSuspending;
         }
 
+        public object NavBar { get; internal set; }
+
         /// <summary>
         /// Wird aufgerufen, wenn die Anwendung durch den Endbenutzer normal gestartet wird. Weitere Einstiegspunkte
         /// werden z. B. verwendet, wenn die Anwendung gestartet wird, um eine bestimmte Datei zu öffnen.
