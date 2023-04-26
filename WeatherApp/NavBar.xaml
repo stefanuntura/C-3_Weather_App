@@ -16,7 +16,6 @@
                 <TextBox x:Name="CitySearchBox" PlaceholderText="Search for a city" Width="200" KeyDown="CitySearchBox_KeyDown"/>
                 <NavigationViewItemSeparator/>
                 <NavigationViewItem Content="Map" x:Name="Map" Tag="Map"/>
-                <NavigationViewItem Content="Details" x:Name="Details" Tag="Details"/>
                 <NavigationViewItem Content="5 Day Forecast" x:Name="Forecast" Tag="Forecast"/>
                 <NavigationViewItem Content="Historical Data" x:Name="Historical" Tag="Historical"/>
             </NavigationView.MenuItems>

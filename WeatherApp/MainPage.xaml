@@ -11,5 +11,8 @@
 
     <Grid>
         <local:NavBar/>
+        <Grid x:Name="MainContentGrid" Margin="0,44,0,0">
+            <TextBox x:Name="FakeContent" HorizontalAlignment="Center" Text="This is the main page content" VerticalAlignment="Center" Height="184" Width="538" FontSize="48" TextWrapping="Wrap" TextAlignment="Center"/>
+        </Grid>
     </Grid>
 </Page>
