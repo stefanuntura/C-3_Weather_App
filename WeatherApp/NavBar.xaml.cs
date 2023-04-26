@@ -1,23 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Devices.Geolocation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage.Streams;
 using Windows.System;
-using Windows.UI.Popups;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Maps;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 
@@ -26,6 +12,9 @@ namespace WeatherApp
     public sealed partial class NavBar : UserControl
     {
         public event EventHandler<string> SearchTextChanged;
+        private int currentNavItemIndex = 0;
+        public NavigationCacheMode NavigationCacheMode { get; set; }
+
         public NavBar()
         {
             this.InitializeComponent();
@@ -43,34 +32,63 @@ namespace WeatherApp
             }
         }
 
-        // Page navigation for the NavBar tabs
+        // Method to navigate through the Nav Bar
         private void NavigationView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
+            // Determines which slide transition to use depending which index of the Nav Bar the user is on
+            int newIndex = sender.MenuItems.IndexOf(args.InvokedItemContainer);
+
+            SlideNavigationTransitionEffect effect = GetTransitionEffect(newIndex);
+
+            currentNavItemIndex = newIndex;
+
             if (args.IsSettingsInvoked)
             {
-                //  to the app settings page
-                Frame.Navigate(typeof(Settings));
+                NavigateToSettingsPage(effect);
             }
             else
             {
-                // Navigate to the selected page based on the Tag property
                 string tag = args.InvokedItemContainer.Tag.ToString();
-                switch (tag)
-                {
-                    case "Map":
-                        Frame.Navigate(typeof(Map));
-                        break;
-                    case "Details":
-                        Frame.Navigate(typeof(Details));
-                        break;
-                    case "Forecast":
-                        Frame.Navigate(typeof(Forecast));
-                        break;
-                    case "Historical":
-                        Frame.Navigate(typeof(Historical));
-                        break;
-                }
+                NavigateToPageWithTag(tag, effect);
+            }
+        }
 
+        // Determines the transition effect
+        private SlideNavigationTransitionEffect GetTransitionEffect(int newIndex)
+        {
+            if (newIndex > currentNavItemIndex)
+            {
+                return SlideNavigationTransitionEffect.FromRight;
+            }
+            else
+            {
+                return SlideNavigationTransitionEffect.FromLeft;
+            }
+        }
+
+        // To the app settings page
+        private void NavigateToSettingsPage(SlideNavigationTransitionEffect effect)
+        {
+            Frame.Navigate(typeof(Settings), null, new SlideNavigationTransitionInfo() { Effect = effect });
+        }
+
+        // Navigate to the selected page based on the tag property
+        private void NavigateToPageWithTag(string tag, SlideNavigationTransitionEffect effect)
+        {
+            switch (tag)
+            {
+                case "Map":
+                    Frame.Navigate(typeof(Map), null, new SlideNavigationTransitionInfo() { Effect = effect });
+                    break;
+                case "Details":
+                    Frame.Navigate(typeof(Details), null, new SlideNavigationTransitionInfo() { Effect = effect });
+                    break;
+                case "Forecast":
+                    Frame.Navigate(typeof(Forecast), null, new SlideNavigationTransitionInfo() { Effect = effect });
+                    break;
+                case "Historical":
+                    Frame.Navigate(typeof(Historical), null, new SlideNavigationTransitionInfo() { Effect = effect });
+                    break;
             }
         }
     }
