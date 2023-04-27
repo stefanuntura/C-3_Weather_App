@@ -46,7 +46,7 @@ namespace WeatherApp
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             DbManager db = DbManager.getInstance();
-            db.selectCurrentDay("Teheran");
+            db.selectForecast("Teheran");
             Frame rootFrame = Window.Current.Content as Frame;
 
                 // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.

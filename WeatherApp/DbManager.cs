@@ -315,38 +315,48 @@ namespace WeatherApp
         // Select Forecast from current daté to 5 days in the future
         public List<WeatherData.Root> selectForecast(String city)
         {
-            string dateNow = DateTime.Now.ToString("dd.MM.yyyy");
-            string dateThen = DateTime.Now.AddDays(5).ToString("dd.MM.yyyy");
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM weather_data WHERE city = @city AND day BETWEEN @now AND @then";
-            command.Parameters.AddWithValue("@city", city);
-            command.Parameters.AddWithValue("@now", dateNow);
-            command.Parameters.AddWithValue("@then", dateThen);
-
-            List<WeatherData.Root> list = new List<WeatherData.Root>();
-
-            try
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                using (SqlDataReader reader = command.ExecuteReader())
+                if (conn != null)
                 {
-                    while (reader.Read())
-                    {
-                        WeatherData.Root res = convertSqlToObject(reader);
-                        list.Add(res);
-                    }
+                    conn.Open();
                 }
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.ToString());
-            }
 
-            foreach (var item in list)
-            {
-                Trace.WriteLine(item.dt.ToString());
-            }
+                using (SqlCommand command = conn.CreateCommand())
+                {
+                    string dateNow = DateTime.Now.ToString("dd.MM.yyyy");
+                    string dateThen = DateTime.Now.AddDays(5).ToString("dd.MM.yyyy");
+                    command.CommandText = "SELECT * FROM weather_data WHERE city = @city AND day BETWEEN @now AND @then";
+                    command.Parameters.AddWithValue("@city", city);
+                    command.Parameters.AddWithValue("@now", dateNow);
+                    command.Parameters.AddWithValue("@then", dateThen);
 
-            return list;
+                    List<WeatherData.Root> list = new List<WeatherData.Root>();
+
+                    try
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                WeatherData.Root res = convertSqlToObject(reader);
+                                list.Add(res);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex.ToString());
+                    }
+
+                    foreach (var item in list)
+                    {
+                        Trace.WriteLine(item.dt.ToString());
+                    }
+
+                    return list;
+                }
+            }      
         }
 
         public void update(WeatherData.Root data)
@@ -358,70 +368,107 @@ namespace WeatherApp
 
         }
 
-        public void executeUpdateQuery(WeatherData.Root data, WeatherData.Weather weather)
+        public void executeUpdateQuery(WeatherData.Root item, WeatherData.Weather weather)
         {
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = "UPDATE weather_data " +
-                "SET city = @city, temp = @temp, description = @description, " +
-                "pressure = @pressure, humidity = @humidity,  " +
-                "feels_like = @feels, wind_speed = @windSpeed, wind_direction = @windDirect, " +
-                " lat = @lat, lon = @lon, unit = @unit " +
-                "WHERE city = @city AND day = @date";
-
-            String dbDate = Utilities.unixTimeStampToDate(data.dt);
-            command.Parameters.AddWithValue("@day", dbDate);
-            command.Parameters.AddWithValue("@city", Global_Variables.cityName);
-            command.Parameters.AddWithValue("@temp", data.main.temp);
-            command.Parameters.AddWithValue("@description", weather.description);
-            command.Parameters.AddWithValue("@pressure", data.main.pressure);
-            command.Parameters.AddWithValue("@humidity", data.main.humidity);
-            command.Parameters.AddWithValue("@feels", data.main.feels_like);
-            command.Parameters.AddWithValue("@windSpeed", data.wind.speed);
-            command.Parameters.AddWithValue("@windDirect", data.wind.deg);
-            command.Parameters.AddWithValue("@lat", data.coord.lat);
-            command.Parameters.AddWithValue("@lon", data.coord.lon);
-            command.Parameters.AddWithValue("@unit", Global_Variables.units);
-
-            try
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                command.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.ToString());
+                if (conn != null)
+                {
+                    conn.Open();
+                }
+
+                using (SqlCommand command = conn.CreateCommand())
+                {
+                    command.CommandText = "UPDATE weather_data " +
+                    "SET city = @city, temp = @temp, description = @description, " +
+                    "main = @main, icon = @icon, id = @id, max_temp = @max, min_temp = @min, sunset = @sunset, sunrise = @sunrise," +
+                    "pressure = @pressure, humidity = @humidity,  " +
+                    "feels_like = @feels, wind_speed = @windSpeed, wind_direction = @windDirect, " +
+                    " lat = @lat, lon = @lon, unit = @unit " +
+                    "WHERE city = @city AND day = @date";
+
+                    String dbDate = Utilities.unixTimeStampToDate(item.dt);
+
+                    command.Parameters.AddWithValue("@day", dbDate);
+                    command.Parameters.AddWithValue("@temp", item.main != null ? item.main.temp : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@description", weather != null && !string.IsNullOrEmpty(weather.description) ? weather.description : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@pressure", item.main != null ? item.main.pressure : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@humidity", item.main != null ? item.main.humidity : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@feels", item.main != null ? item.main.feels_like : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@windSpeed", item.wind != null ? item.wind.speed : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@windDirect", item.wind != null ? item.wind.deg : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@lat", item.coord != null ? item.coord.lat : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@lon", item.coord != null ? item.coord.lon : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@id", weather != null ? weather.id : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@main", weather != null && !string.IsNullOrEmpty(weather.main) ? weather.main : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@icon", weather != null && !string.IsNullOrEmpty(weather.icon) ? weather.icon : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@min", item.main != null ? item.main.temp_min : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@max", item.main != null ? item.main.temp_max : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@sunset", item.sys != null ? item.sys.sunset : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@sunrise", item.sys != null ? item.sys.sunrise : (object)DBNull.Value);
+
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex.ToString());
+                    }
+                }
             }
         }
 
         public void delete(string data, DateTime date)
         {
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = "DELETE FROM weather_data WHERE city = @city AND day = @date";
-            command.Parameters.AddWithValue("@day", date.ToString("dd.MM.yyyy"));
-            command.Parameters.AddWithValue("@city", data);
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                if (conn != null)
+                {
+                    conn.Open();
+                }
 
-            try
-            {
-                command.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.ToString());
-            }
+                using (SqlCommand command = conn.CreateCommand())
+                {
+                    command.CommandText = "DELETE FROM weather_data WHERE city = @city AND day = @date";
+                    command.Parameters.AddWithValue("@day", date.ToString("dd.MM.yyyy"));
+                    command.Parameters.AddWithValue("@city", data);
+
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex.ToString());
+                    }
+                }
+            }        
         }
 
         public void deleteAllEntriesPerCity(string city)
         {
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = "DELETE FROM weather_data WHERE city = @city";
-            command.Parameters.AddWithValue("@city", city);
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                if (conn != null)
+                {
+                    conn.Open();
+                }
 
-            try
-            {
-                command.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.ToString());
+                using (SqlCommand command = conn.CreateCommand())
+                {
+                    command.CommandText = "DELETE FROM weather_data WHERE city = @city";
+                    command.Parameters.AddWithValue("@city", city);
+
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex.ToString());
+                    }
+                }
             }
         }
 
@@ -440,6 +487,7 @@ namespace WeatherApp
             });
         }*/
 
+        //TO DO: Update Historical Queries
         public void executeHistoricalInsert(WeatherData.Root item, WeatherData.Weather weather)
         {
             SqlCommand command = connection.CreateCommand();
