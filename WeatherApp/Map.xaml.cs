@@ -29,6 +29,14 @@ namespace WeatherApp
             weatherMap.ZoomLevel = 1;
         }
 
+        private void Grid_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            lock (Global_Variables.lockObj)
+            {
+                SearchCity(Global_Variables.cityName);
+            }
+        }
+
         private void OnSearchTermReceived(object recipient, NavSearch message)
         {
             lock (Global_Variables.lockObj)

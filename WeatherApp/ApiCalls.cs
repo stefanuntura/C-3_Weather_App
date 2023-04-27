@@ -26,11 +26,7 @@ namespace WeatherApp
             }
             catch (Exception e)
             {
-                Console.WriteLine("Oops! Request has failed with the following error: " + e);
-
-
                 //TO DO: Add error visual display for the UI
-
                 return null;
             }
             return null;
@@ -53,12 +49,8 @@ namespace WeatherApp
             }
             catch (Exception e)
             {
-                Console.WriteLine("Oops! Request has failed with the following error: " + e);
-
                 return null;
-
                 //TO DO: Add error visual display for the UI
-
             }
 
             return null;
@@ -70,30 +62,43 @@ namespace WeatherApp
 
             String url = Utilities.prepareHistoricalWeatherDataApiUrl();
 
-            Console.WriteLine("Url: " + url);
-
             try
             {
                 string response = await client.GetStringAsync(url);
 
-                Console.WriteLine("Response: " + response);
-
 
                 if (response != null && response != "")
                 {
-                    Console.WriteLine("Response: " + response);
-
                     return parseWeatherHistoricalJson(response);
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Oops! Request has failed with the following error: " + e);
-
                 return null;
-
                 //TO DO: Add error visual display for the UI
+            }
 
+            return null;
+        }
+
+        public static async Task<HttpResponseMessage> fetchWeatherIcon(string url)
+        {
+            HttpClient client = new HttpClient();
+
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(url);
+                var content = response.Content;
+
+                if (response != null)
+                {
+                    return response;
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+                //TO DO: Add error visual display for the UI
             }
 
             return null;

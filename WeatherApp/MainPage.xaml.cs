@@ -31,22 +31,11 @@ namespace WeatherApp
     /// </summary>
     public sealed partial class MainPage : Page
     {
-         private Stopwatch stopwatch;
+        private Stopwatch stopwatch;
 
         public MainPage()
         {
             this.InitializeComponent();
-
-            // Subscribe to the HidePageElements message
-            WeakReferenceMessenger.Default.Register<HidePageElements>(this, OnHidePageElementsMessageReceived);
-
-
-        }
-
-        private void OnHidePageElementsMessageReceived(object recipient, HidePageElements message)
-        {
-            // Hide the grid
-            MainContentGrid.Visibility = Visibility.Collapsed;
         }
     }
 }

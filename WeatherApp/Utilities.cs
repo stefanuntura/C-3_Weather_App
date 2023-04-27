@@ -100,5 +100,15 @@ namespace WeatherApp
 
             return JsonConvert.DeserializeObject<List<WeatherHistoricalData.Root>>(content);
         }
+
+        public static string prepareTempForUI(double temperature)
+        {
+            return Math.Round(temperature).ToString() + convertMeasurementUnitSymbol();
+        }
+
+        public static string convertMeasurementUnitSymbol()
+        {
+            return Global_Variables.units == "metric" ? "\u2103" : "\u2109";
+        }
     }
 }
