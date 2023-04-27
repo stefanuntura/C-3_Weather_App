@@ -1,18 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Media.Imaging;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=234238 dokumentiert.
 
@@ -75,7 +68,7 @@ namespace WeatherApp
             {
                 WeatherData.Root weather = forecast.list[i];
                 List<TextBlock> blockList = selectTextBlock(i);
-                if (blockList != null)
+                if(blockList != null)
                 {
                     //Description of weather
                     blockList[1].Text = weather.weather[0].description;
@@ -89,6 +82,28 @@ namespace WeatherApp
 
                     //Humidity
                     blockList[4].Text = "Humidity: " + weather.main.humidity.ToString();
+
+                    BitmapImage bitmap = new BitmapImage(new Uri(Utilities.prepareWeatherIconUrl(weather.weather[0].icon)));
+                    ImageSource imageSource = bitmap as ImageSource;
+
+                    switch (i)
+                    {
+                        case 0:
+                            OneImage.Source = imageSource;
+                            break;
+                        case 1:
+                            TwoImage.Source = imageSource;
+                            break;
+                        case 2:
+                            ThreeImage.Source = imageSource;
+                            break;
+                        case 3:
+                            FourImage.Source = imageSource;
+                            break;
+                        case 4:
+                            FiveImage.Source = imageSource;
+                            break;
+                    }
                 }
             }
         }

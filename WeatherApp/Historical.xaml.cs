@@ -47,6 +47,7 @@ namespace WeatherApp
                 weatherHistoricalData = await Utilities.extractHistoricalWeatherData();
 
                 // Synchronous collection itteration & table data population
+                // WARNING!!! Running method of popualting UI synchronously WILL crash your PC :)
                 if (!Global_Variables.isMultiThreaded)
                 {
                     for(int i = 0; i < weatherHistoricalData.Count; i++)
@@ -58,7 +59,6 @@ namespace WeatherApp
                 else
                 {
                     semaphore = new Semaphore(initialCount: 0, maximumCount: 5);
-                        
                     
                     Thread[] threadList = new Thread[20];
                     semaphoreSlim = new SemaphoreSlim(5);
@@ -71,6 +71,11 @@ namespace WeatherApp
                         threadList[i] = new Thread(() => populateHistroicalDataTableAsync(localI));
                         //Start the thread
                         threadList[i].Start(); 
+                    }
+
+                    for (int i = 0; i < threadList.GetLength(0); i++)
+                    {
+                        threadList[i].Join();
                     }
                 }
             }
