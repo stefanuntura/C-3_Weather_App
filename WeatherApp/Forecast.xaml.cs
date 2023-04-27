@@ -11,9 +11,6 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace WeatherApp
 {
-    /// <summary>
-    /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
-    /// </summary>
     public sealed partial class Forecast : Page
     {
         public Forecast()

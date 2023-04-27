@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -27,7 +28,7 @@ namespace WeatherApp
         /// Initialisiert das Singletonanwendungsobjekt. Dies ist die erste Zeile von erstelltem Code
         /// und daher das logische Äquivalent von main() bzw. WinMain().
         /// </summary>
-        private string connectionString = @"Data Source=LAPTOP-9M0QVSK5\SQLEXPRESS01;Initial Catalog = WeatherDb; Integrated Security = True";
+        private string connectionString = @"Data Source=LAPTOP-9M0QVSK5\SQLEXPRESS01;Initial Catalog = WeatherDb; Integrated Security = SSPI";
         public string ConnectionString { get => connectionString; set => connectionString = value; }
         public App()
         {
@@ -46,9 +47,9 @@ namespace WeatherApp
         {
             Frame rootFrame = Window.Current.Content as Frame;
 
-            // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
-            // Nur sicherstellen, dass das Fenster aktiv ist.
-            if (rootFrame == null)
+                // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
+                // Nur sicherstellen, dass das Fenster aktiv ist.
+                if (rootFrame == null)
             {
                 // Frame erstellen, der als Navigationskontext fungiert und zum Parameter der ersten Seite navigieren
                 rootFrame = new Frame();
