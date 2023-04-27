@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,9 +16,16 @@ namespace WeatherApp
 
         private DbManager()
         {
-            string connectionString = "Data Source=LAPTOP-9M0QVSK5\\SQLEXPRESS01;Initial Catalog=WeatherDb;Integrated Security=True";
+            /*string connectionString = (App.Current as App).ConnectionString;
+            Trace.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Trace.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Trace.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Trace.WriteLine(connectionString);
+            Trace.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Trace.WriteLine("-------------------------------------------------------------------------------------------------------------");
+            Trace.WriteLine("-------------------------------------------------------------------------------------------------------------");
             connection = new SqlConnection(connectionString);
-            connection.Open();
+            connection.Open();*/
         }
 
 
@@ -92,9 +100,11 @@ namespace WeatherApp
         // Accepts a list of WeatherData.Root objects
         public void insertMulti(WeatherForecastData list)
         {
-            list.list.AsParallel().ForAll(data => {
-                insertMulti(data);
-            });
+            {
+                list.list.AsParallel().ForAll(data => {
+                    insertMulti(data);
+                });
+            }
         }
 
         // Accepts single WeatherDate.Root object 
@@ -137,38 +147,48 @@ namespace WeatherApp
 
         public void executeInsertQuery(WeatherData.Root item, WeatherData.Weather weather)
         {
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = "INSERT INTO weather_data " +
-                "(day, city, temp, description, pressure, humidity, feels_like, wind_speed, wind_deg, lat, lon, unit) " +
-                "VALUES (@day, @city, @temp, @description, @pressure, @humidity, @feels, @windSpeed, @windDirect, @lat, @lon, @unit)";
-
-            String dbDate = Utilities.unixTimeStampToDate(item.dt);
-
-            command.Parameters.AddWithValue("@day", dbDate);
-            command.Parameters.AddWithValue("@temp", item.main != null ? item.main.temp : (object)DBNull.Value);
-            command.Parameters.AddWithValue("@description", weather != null ? weather.description : (object)DBNull.Value);
-            command.Parameters.AddWithValue("@pressure", item.main != null ? item.main.pressure : (object)DBNull.Value);
-            command.Parameters.AddWithValue("@humidity", item.main != null ? item.main.humidity : (object)DBNull.Value);
-            command.Parameters.AddWithValue("@feels", item.main != null ? item.main.feels_like : (object)DBNull.Value);
-            command.Parameters.AddWithValue("@windSpeed", item.wind != null ? item.wind.speed : (object)DBNull.Value);
-            command.Parameters.AddWithValue("@windDirect", item.wind != null ? item.wind.deg : (object)DBNull.Value);
-            command.Parameters.AddWithValue("@lat", item.coord != null ? item.coord.lat : (object)DBNull.Value);
-            command.Parameters.AddWithValue("@lon", item.coord != null ? item.coord.lon : (object)DBNull.Value);
-
-            lock (Global_Variables.lockObj)
+            Trace.WriteLine("--------------------" + (App.Current as App).ConnectionString);
+            using (SqlConnection conn = new SqlConnection((App.Current as App).ConnectionString))
             {
-                command.Parameters.AddWithValue("@city", Global_Variables.cityName != null ? Global_Variables.cityName : (object)DBNull.Value);
-                command.Parameters.AddWithValue("@unit", Global_Variables.units != null ? Global_Variables.units : (object)DBNull.Value);
-            }
+                if(conn != null)
+                {
+                    conn.Open();
+                }
+                using(SqlCommand command = conn.CreateCommand())
+                {
+                    command.CommandText = "INSERT INTO weather_data " +
+                    "(day, city,lon, lat, id, main, description, icon, temp, feels_like, temp_min, temp_max, pressure, humidity,  wind_speed, wind_deg,  gust, unit, sys_type, country, sunrise, sunset, timezone) " +
+                    "VALUES (@day, @city, @lat, @lon, @id, @main, @description, @icon, @temp, @feels, @min, @max, @pressure, @humidity, @windSpeed, @windDirect, @gust, @unit, @sys, @country, @sunrise, @sunset, @timezone)";
 
-            try
-            {
-                command.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.ToString());
-            }
+                    String dbDate = Utilities.unixTimeStampToDate(item.dt);
+
+                    command.Parameters.AddWithValue("@day", dbDate);
+                    command.Parameters.AddWithValue("@temp", item.main != null ? item.main.temp : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@description", weather != null ? weather.description : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@pressure", item.main != null ? item.main.pressure : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@humidity", item.main != null ? item.main.humidity : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@feels", item.main != null ? item.main.feels_like : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@windSpeed", item.wind != null ? item.wind.speed : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@windDirect", item.wind != null ? item.wind.deg : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@lat", item.coord != null ? item.coord.lat : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@lon", item.coord != null ? item.coord.lon : (object)DBNull.Value);
+
+                    lock (Global_Variables.lockObj)
+                    {
+                        command.Parameters.AddWithValue("@city", Global_Variables.cityName != null ? Global_Variables.cityName : (object)DBNull.Value);
+                        command.Parameters.AddWithValue("@unit", Global_Variables.units != null ? Global_Variables.units : (object)DBNull.Value);
+                    }
+
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex.ToString());
+                    }
+                }
+            } 
         }
 
 
@@ -368,7 +388,7 @@ namespace WeatherApp
 
         }
 
-        public void insertHistoricalBulk(List<WeatherData.Root> data)
+        /*public void insertHistoricalBulk(List<WeatherData.Root> data)
         {
             foreach (var item in data)
             {
@@ -377,7 +397,7 @@ namespace WeatherApp
                     executeInsertQuery(item, weather);
                 }
             }
-        }
+        }*/
 
         public List<WeatherData.Root> selectHistoricalDataByDate(int start, int end)
         {

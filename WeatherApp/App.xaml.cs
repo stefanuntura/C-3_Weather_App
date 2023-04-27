@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Contacts;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -26,6 +27,8 @@ namespace WeatherApp
         /// Initialisiert das Singletonanwendungsobjekt. Dies ist die erste Zeile von erstelltem Code
         /// und daher das logische Äquivalent von main() bzw. WinMain().
         /// </summary>
+        private string connectionString = @"Data Source=LAPTOP-9M0QVSK5\SQLEXPRESS01;Initial Catalog = WeatherDb; Integrated Security = True";
+        public string ConnectionString { get => connectionString; set => connectionString = value; }
         public App()
         {
             this.InitializeComponent();
