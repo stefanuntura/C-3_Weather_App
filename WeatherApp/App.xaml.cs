@@ -45,6 +45,8 @@ namespace WeatherApp
         /// <param name="e">Details über Startanforderung und -prozess.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            DbManager db = DbManager.getInstance();
+            db.selectCurrentDay("Teheran");
             Frame rootFrame = Window.Current.Content as Frame;
 
                 // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.

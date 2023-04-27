@@ -12,20 +12,12 @@ namespace WeatherApp
     internal class DbManager
     {
         private static DbManager dbManager;
+        private string connectionString;
         internal SqlConnection connection { get; set; }
 
         private DbManager()
         {
-            /*string connectionString = (App.Current as App).ConnectionString;
-            Trace.WriteLine("-------------------------------------------------------------------------------------------------------------");
-            Trace.WriteLine("-------------------------------------------------------------------------------------------------------------");
-            Trace.WriteLine("-------------------------------------------------------------------------------------------------------------");
-            Trace.WriteLine(connectionString);
-            Trace.WriteLine("-------------------------------------------------------------------------------------------------------------");
-            Trace.WriteLine("-------------------------------------------------------------------------------------------------------------");
-            Trace.WriteLine("-------------------------------------------------------------------------------------------------------------");
-            connection = new SqlConnection(connectionString);
-            connection.Open();*/
+            connectionString = (App.Current as App).ConnectionString;
         }
 
 
@@ -40,9 +32,12 @@ namespace WeatherApp
 
 
         // Converts the retrieved data from the database into a WeatherData.Root object
+        //TO DO: save city value? 
         public WeatherData.Root convertSqlToObject(SqlDataReader reader)
         {
             Trace.WriteLine("SQLtoObject");
+
+            //initialize required classes
             WeatherData.Root root = new WeatherData.Root();
             root.main = new WeatherData.Main();
             root.weather = new List<WeatherData.Weather>();
@@ -50,44 +45,109 @@ namespace WeatherApp
             root.weather.Add(weather);
             root.coord = new WeatherData.Coord();
             root.wind = new WeatherData.Wind();
+            root.sys = new WeatherData.Sys();
             WeatherData.Weather weatherObj = new WeatherData.Weather();
 
-            if (!reader.IsDBNull(4))
-            {
-                root.main.pressure = reader.GetInt32(4);
-            }
 
-            root.main.temp = reader.GetDouble(2);
-            weatherObj.description = reader.GetString(3);
             root.dt = (int)Utilities.unixTimeStampFromDate(reader.GetDateTime(0));
 
+            if (!reader.IsDBNull(2))
+            {
+                root.coord.lon = reader.GetDouble(2);
+            }
+
+            if (!reader.IsDBNull(3))
+            {
+                root.coord.lat = reader.GetDouble(3);
+            }
+
             if (!reader.IsDBNull(4))
             {
-                root.main.pressure = reader.GetInt32(4);
+                weatherObj.id = reader.GetInt32(4);
             }
 
             if (!reader.IsDBNull(5))
             {
-                root.main.humidity = reader.GetInt32(5);
+                weatherObj.main = reader.GetString(5);
+            }
+
+            if (!reader.IsDBNull(6))
+            {
+                weatherObj.description = reader.GetString(6);
             }
 
             if (!reader.IsDBNull(7))
             {
-                root.main.feels_like = reader.GetDouble(7);
+                weatherObj.icon = reader.GetString(7);
             }
 
             if (!reader.IsDBNull(8))
             {
-                root.wind.speed = reader.GetDouble(8);
+                root.main.temp = reader.GetDouble(8);
             }
 
             if (!reader.IsDBNull(9))
             {
-                root.wind.deg = reader.GetInt32(9);
+                root.main.feels_like = reader.GetDouble(9);
             }
 
-            root.coord.lat = reader.GetDouble(12);
-            root.coord.lon = reader.GetDouble(13);
+            if (!reader.IsDBNull(10))
+            {
+                root.main.temp_min = reader.GetDouble(10);
+            }
+
+            if (!reader.IsDBNull(11))
+            {
+                root.main.temp_max = reader.GetDouble(11);
+            }
+
+            if (!reader.IsDBNull(12))
+            {
+                root.main.pressure = reader.GetInt32(12);
+            }
+
+            if (!reader.IsDBNull(13))
+            {
+                root.main.humidity = reader.GetInt32(13);
+            }
+
+            if (!reader.IsDBNull(14))
+            {
+                root.wind.speed = reader.GetDouble(14);
+            }
+
+            if (!reader.IsDBNull(15))
+            {
+                root.wind.deg = reader.GetInt32(15);
+            }
+
+            if (!reader.IsDBNull(16))
+            {
+                root.wind.gust = reader.GetDouble(16);
+            }
+
+            //17 is unit
+
+            if (!reader.IsDBNull(18))
+            {
+                root.sys.type = reader.GetInt32(18);
+            }
+
+            if (reader.IsDBNull(20))
+            {
+                root.sys.sunrise = reader.GetInt32(20);
+            }
+
+            if (reader.IsDBNull(21))
+            {
+                root.sys.sunset = reader.GetInt32(21);
+            }
+
+            if (reader.IsDBNull(22))
+            {
+                root.timezone = reader.GetInt32(22);
+            }
+
             root.weather.Add(weatherObj);
 
             Trace.WriteLine(root.ToString());
@@ -147,14 +207,13 @@ namespace WeatherApp
 
         public void executeInsertQuery(WeatherData.Root item, WeatherData.Weather weather)
         {
-            Trace.WriteLine("--------------------" + (App.Current as App).ConnectionString);
-            using (SqlConnection conn = new SqlConnection((App.Current as App).ConnectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                if(conn != null)
+                if (conn != null)
                 {
                     conn.Open();
                 }
-                using(SqlCommand command = conn.CreateCommand())
+                using (SqlCommand command = conn.CreateCommand())
                 {
                     command.CommandText = "INSERT INTO weather_data " +
                     "(day, city,lon, lat, id, main, description, icon, temp, feels_like, temp_min, temp_max, pressure, humidity,  wind_speed, wind_deg,  gust, unit, sys_type, country, sunrise, sunset, timezone) " +
@@ -164,7 +223,7 @@ namespace WeatherApp
 
                     command.Parameters.AddWithValue("@day", dbDate);
                     command.Parameters.AddWithValue("@temp", item.main != null ? item.main.temp : (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@description", weather != null ? weather.description : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@description", weather != null && !string.IsNullOrEmpty(weather.description) ? weather.description : (object)DBNull.Value);
                     command.Parameters.AddWithValue("@pressure", item.main != null ? item.main.pressure : (object)DBNull.Value);
                     command.Parameters.AddWithValue("@humidity", item.main != null ? item.main.humidity : (object)DBNull.Value);
                     command.Parameters.AddWithValue("@feels", item.main != null ? item.main.feels_like : (object)DBNull.Value);
@@ -172,6 +231,19 @@ namespace WeatherApp
                     command.Parameters.AddWithValue("@windDirect", item.wind != null ? item.wind.deg : (object)DBNull.Value);
                     command.Parameters.AddWithValue("@lat", item.coord != null ? item.coord.lat : (object)DBNull.Value);
                     command.Parameters.AddWithValue("@lon", item.coord != null ? item.coord.lon : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@id", weather != null ? weather.id : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@main", weather != null && !string.IsNullOrEmpty(weather.main) ? weather.main : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@icon", weather != null && !string.IsNullOrEmpty(weather.icon) ? weather.icon : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@min", item.main != null ? item.main.temp_min : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@max", item.main != null ? item.main.temp_max : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@gust", item.wind != null ? item.wind.gust : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@sys", item.sys != null ? item.sys.type : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@sunset", item.sys != null ? item.sys.sunset : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@sunrise", item.sys != null ? item.sys.sunrise : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@country", item.sys != null && !string.IsNullOrEmpty(item.sys.country) ? item.sys.country : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@timezone", item.timezone != null ? item.timezone : (object)DBNull.Value);
+
+
 
                     lock (Global_Variables.lockObj)
                     {
@@ -206,27 +278,38 @@ namespace WeatherApp
 
         public WeatherData.Root selectDay(String city, String date)
         {
-            SqlCommand command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM weather_data WHERE city = @city AND day = @day";
-            command.Parameters.AddWithValue("@city", city);
-            command.Parameters.AddWithValue("@day", date);
-            WeatherData.Root res = new WeatherData.Root();
-
-            try
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                using (SqlDataReader reader = command.ExecuteReader())
+                if (conn != null)
                 {
-                    reader.Read();
-                    res = convertSqlToObject(reader);
+                    conn.Open();
                 }
 
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.ToString());
-            }
+                using (SqlCommand command = conn.CreateCommand())
+                {
+                    command.CommandText = "SELECT * FROM weather_data WHERE city = @city AND day = @day";
+                    command.Parameters.AddWithValue("@city", city);
+                    command.Parameters.AddWithValue("@day", date);
+                    WeatherData.Root res = new WeatherData.Root();
 
-            return res;
+                    try
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            reader.Read();
+                            res = convertSqlToObject(reader);
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex.ToString());
+                    }
+
+                    return res;
+                }
+            }
+                   
         }
 
         // Select Forecast from current daté to 5 days in the future
