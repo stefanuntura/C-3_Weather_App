@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -84,7 +84,6 @@ namespace WeatherApp
         public static WeatherForecastData fetchFiveDayWeatherForecastSync() 
         {
             HttpClient client = new HttpClient();
-
             String url = Utilities.prepareFiveDaysWeatherForecastDataApiUrl();
 
             try
