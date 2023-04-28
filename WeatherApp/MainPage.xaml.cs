@@ -29,7 +29,7 @@ namespace WeatherApp
     // Main Page class of the application. Once a user leaves the main page, they don't navigate back towards it
     public sealed partial class MainPage : Page
     {
-         private Stopwatch stopwatch;
+        private Stopwatch stopwatch;
 
         public MainPage()
         {

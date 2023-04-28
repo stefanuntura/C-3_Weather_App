@@ -27,20 +27,27 @@ namespace WeatherApp
             this.InitializeComponent();
         }
 
-        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
+        private void MetricsButton_Checked(object sender, RoutedEventArgs e)
         {
-            myToggleButton.Content = "Celsius";
+            MetricsButton.Content = "Celsius";
             Global_Variables.units = "metric";
-
         }
 
-        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        private void MetricsButton_Unchecked(object sender, RoutedEventArgs e)
         {
-            myToggleButton.Content = "Fahrenheit";
+            MetricsButton.Content = "Fahrenheit";
             Global_Variables.units = "imperial";
         }
+        private void MultiThreadingButton_Checked(object sender, RoutedEventArgs e)
+        {
+            MultiThreadingButton.Content = "Multi Threaded";
+            Global_Variables.isMultiThreaded = true;
+        }
 
-        //TO DO: Add multithreading button functionality
-
+        private void MultiThreadingButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            MultiThreadingButton.Content = "Single Threaded";
+            Global_Variables.isMultiThreaded = false;
+        }
     }
 }

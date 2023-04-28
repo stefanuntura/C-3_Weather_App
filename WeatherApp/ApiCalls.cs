@@ -74,8 +74,6 @@ namespace WeatherApp
             }
             catch (Exception e)
             {
-                Console.WriteLine("Oops! Request has failed with the following error: " + e);
-
                 return null;
             }
 
@@ -88,8 +86,6 @@ namespace WeatherApp
             HttpClient client = new HttpClient();
 
             String url = Utilities.prepareFiveDaysWeatherForecastDataApiUrl();
-
-            Console.WriteLine("Url: " + url);
 
             try
             {

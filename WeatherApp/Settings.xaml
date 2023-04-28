@@ -11,13 +11,15 @@
     <Grid>
         <local:NavBar/>
         <!-- Temperature Settings -->
-        <ToggleButton x:Name="myToggleButton" Content="Celsius" Width="157" Height="32" IsChecked="True" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Margin="36,161,0,0" VerticalAlignment="Top"/>
+        <ToggleButton x:Name="MetricsButton" Content="Celsius" Width="157" Height="32" IsChecked="True" Margin="36,161,0,0" VerticalAlignment="Top" Unchecked="MetricsButton_Unchecked" Checked="MetricsButton_Checked"/>
         <TextBlock HorizontalAlignment="Left" Height="38" Margin="36,85,0,0" TextWrapping="Wrap" Foreground="#2c2e2c" FontSize="28" FontFamily="Calibri" FontWeight="Bold" Text="Select Temperature Scale" VerticalAlignment="Top" Width="422"/>
         <TextBlock HorizontalAlignment="Left" Height="38" Margin="36,119,0,0" TextWrapping="Wrap" Foreground="#2c2e2c" FontSize="18" FontFamily="Calibri" Text="Toggle button to switch between Fahrenheit and Celsius" VerticalAlignment="Top" Width="422"/>
-        
-        <ToggleButton x:Name="myToggleButton_Copy" Content="Multithreading" Width="157" Height="32" IsChecked="True" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked" Margin="36,305,0,0" VerticalAlignment="Top"/>
+
+        <ToggleButton x:Name="MultiThreadingButton" Content="Multithreading" Width="157" Height="32" IsChecked="True" Margin="36,305,0,0" VerticalAlignment="Top" Unchecked="MultiThreadingButton_Unchecked" Checked="MultiThreadingButton_Checked"/>
         <TextBlock HorizontalAlignment="Left" Height="38" Margin="36,222,0,0" TextWrapping="Wrap" Foreground="#2c2e2c" FontSize="28" FontFamily="Calibri" FontWeight="Bold" Text="Multithreading Settings" VerticalAlignment="Top" Width="422"/>
         <TextBlock HorizontalAlignment="Left" Height="38" Margin="36,256,0,0" TextWrapping="Wrap" Foreground="#2c2e2c" FontSize="18" FontFamily="Calibri" Text="Toggle button to enable/disable Multithreading" VerticalAlignment="Top" Width="422"/>
+        <TextBlock HorizontalAlignment="Left" Height="38" Margin="36,278,0,0" TextWrapping="Wrap" Foreground="#2c2e2c" FontSize="18" FontFamily="Calibri" Text="Currently:" VerticalAlignment="Top" Width="422"/>
+        <TextBlock HorizontalAlignment="Left" Height="38" Margin="36,139,0,0" TextWrapping="Wrap" Foreground="#2c2e2c" FontSize="18" FontFamily="Calibri" Text="Currently:" VerticalAlignment="Top" Width="422"/>
 
     </Grid>
 </Page>
