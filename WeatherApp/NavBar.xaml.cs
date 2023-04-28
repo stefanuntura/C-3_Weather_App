@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace WeatherApp
 {
+    //NavBar class to navigate through the application
     public sealed partial class NavBar : UserControl
     {
         public event EventHandler<string> SearchTextChanged;
@@ -44,6 +45,7 @@ namespace WeatherApp
             if (args.IsSettingsInvoked)
             {
                 NavigateToSettingsPage(effect);
+                WeakReferenceMessenger.Default.Send(new HidePageElements());
             }
             else
             {
@@ -53,7 +55,6 @@ namespace WeatherApp
                 // Send the HideGridMessage message
                 WeakReferenceMessenger.Default.Send(new HidePageElements());
             }
-
 
         }
 
@@ -92,6 +93,5 @@ namespace WeatherApp
                     break;
             }
         }
-
     }
 }

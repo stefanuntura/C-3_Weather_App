@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace WeatherApp
 {
+    // Class to hold forcast data from OWM
     public class WeatherForecastData
     {
             public string cod { get; set; }

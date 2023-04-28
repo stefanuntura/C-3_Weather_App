@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 namespace WeatherApp
 {
+    //API call class, has various different API calles needed from OpenWeatherMap
     public static class ApiCalls
     {
         public static async Task<WeatherData.Root> fetchCurrentWeather()
@@ -26,16 +27,36 @@ namespace WeatherApp
             }
             catch (Exception e)
             {
-                Console.WriteLine("Oops! Request has failed with the following error: " + e);
-
-
-                //TO DO: Add error visual display for the UI
-
                 return null;
             }
             return null;
         }
 
+        //Sync way to get WeatherData
+        public static WeatherData.Root fetchCurrentWeatherSync()
+        {
+            HttpClient client = new HttpClient();
+
+            String url = Utilities.prepareCurrentWeatherDataApiUrl();
+
+            try
+            {
+                //.Result makes the response sync
+                string response = client.GetStringAsync(url).Result;
+
+                if (response != null && response != "")
+                {
+                    return parseCurrentWeatherJson(response);
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            return null;
+        }
+
+        // async method for fetching forecast
         public static async Task<WeatherForecastData> fetchFiveDaysWeatherForecast()
         {
             HttpClient client = new HttpClient();
@@ -56,83 +77,83 @@ namespace WeatherApp
                 Console.WriteLine("Oops! Request has failed with the following error: " + e);
 
                 return null;
-
-                //TO DO: Add error visual display for the UI
-
             }
 
             return null;
         }
 
-        public static async Task<WeatherHistoricalData> fetchHistoricalWeather()
+        //Sync method for forcast data
+        public static WeatherForecastData fetchFiveDayWeatherForecastSync() 
         {
             HttpClient client = new HttpClient();
 
-            String url = Utilities.prepareHistoricalWeatherDataApiUrl();
+            String url = Utilities.prepareFiveDaysWeatherForecastDataApiUrl();
 
             Console.WriteLine("Url: " + url);
 
             try
             {
-                string response = await client.GetStringAsync(url);
-
-                Console.WriteLine("Response: " + response);
-
+                string response = client.GetStringAsync(url).Result;
 
                 if (response != null && response != "")
                 {
-                    Console.WriteLine("Response: " + response);
-
-                    return parseWeatherHistoricalJson(response);
+                    return parseWeatherForecastJson(response);
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Oops! Request has failed with the following error: " + e);
-
                 return null;
-
-                //TO DO: Add error visual display for the UI
-
             }
 
             return null;
         }
 
-        /*public static async Task<List<ReverseGeoLocation>> fetchGeoLocation()
+        //async method for fetching icon url
+        public static async Task<HttpResponseMessage> fetchWeatherIcon(string url)
         {
             HttpClient client = new HttpClient();
 
-            String url = Utilities.prepareReverseGeoLocationApiUrl();
-
-            Console.WriteLine("Url: " + url);
-
             try
             {
-                string response = await client.GetStringAsync(url);
+                HttpResponseMessage response = await client.GetAsync(url);
+                var content = response.Content;
 
-                Console.WriteLine("Response: " + response);
-
-
-                if (response != null && response != "")
+                if (response != null)
                 {
-                    Console.WriteLine("Response: " + response);
-
-                    return parseGeoLocationJson(response);
+                    return response;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Oops! Request has failed with the following error: " + e);
-
                 return null;
-
                 //TO DO: Add error visual display for the UI
-
             }
 
             return null;
-        }*/
+        }
+
+        //Sync method for fetching icon
+        public static HttpResponseMessage fetchWeatherIconSync(string url)
+        {
+            HttpClient client = new HttpClient();
+
+            try
+            {
+                HttpResponseMessage response = client.GetAsync(url).Result;
+                var content = response.Content;
+
+                if (response != null)
+                {
+                    return response;
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+
+            return null;
+        }
 
         //Deserializes json response to WeatherData.Root class
         //Uses NewtonSoft.Json nugget package
@@ -145,16 +166,5 @@ namespace WeatherApp
         {
             return JsonConvert.DeserializeObject<WeatherForecastData>(json);
         }
-
-        private static WeatherHistoricalData parseWeatherHistoricalJson(String json)
-        {
-            return JsonConvert.DeserializeObject<WeatherHistoricalData>(json);
-        }
-
-        /*private static List<ReverseGeoLocation> parseGeoLocationJson(String json) 
-        {
-            return JsonConvert.DeserializeObject <List<ReverseGeoLocation>>(json);
-        }*/
-
     }
 }

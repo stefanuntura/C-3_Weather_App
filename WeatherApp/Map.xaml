@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <Grid Loaded="Grid_Loaded">
         <local:NavBar Grid.Row="0"/>
         <Grid Margin="0,10,0,232">
             <Custom:MapControl x:Name="weatherMap" Margin="0,32,0,0"/>

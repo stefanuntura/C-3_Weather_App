@@ -2,6 +2,7 @@
 
 namespace WeatherApp
 {
+    // Class to hold historical bulk file data 
     public class WeatherHistoricalData
     {
         public class Main
