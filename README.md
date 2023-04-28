@@ -35,7 +35,7 @@ To ensure that the application runs as intended, there are some things that need
 
 <h4>Remarks </h4>
 
-The historical data tab in the application processes a file consisting of bulk historical weather data of Emmen dating back to 1979, due to a 100mb file limit with github, this file was cut down by about half. So the file dates back to February 2003. 
+The historical data tab in the application processes a file consisting of bulk historical weather data of Emmen dating back to 1979, but due to a 100mb file limit with github, this file was cut down by about half. So the file dates back to February 2003. 
 
-Furthermore, If that part of the application is used when the application runs synchronously, it WILL crash the program (and probably your pc). 
+Furthermore, If that part of the application is used when the application runs synchronously, it WILL crash your pc if the list is large enough (Or at least ours did). 
 
