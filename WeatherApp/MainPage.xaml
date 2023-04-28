@@ -12,7 +12,9 @@
     <Grid>
         <local:NavBar/>
         <Grid x:Name="MainContentGrid" Margin="0,44,0,0">
-            <TextBox x:Name="FakeContent" HorizontalAlignment="Center" Text="This is the main page content" VerticalAlignment="Center" Height="184" Width="538" FontSize="48" TextWrapping="Wrap" TextAlignment="Center"/>
+            <TextBlock HorizontalAlignment="Left" Margin="230,176,0,0" TextWrapping="Wrap" Text="Weather App - Threading" FontSize="88" FontFamily="Arial" FontWeight="Bold" VerticalAlignment="Top" Height="233" Width="1074"/>
+            <TextBlock HorizontalAlignment="Left" Margin="600,811,0,0" TextWrapping="Wrap" Text="Click any Tab to start!" FontSize="29" FontFamily="Arial" FontWeight="Bold" VerticalAlignment="Top" Height="34" Width="316"/>
+            <TextBlock HorizontalAlignment="Left" Margin="155,305,0,0" TextWrapping="Wrap" Text="You can use the Settings page to change between Single and Multiple threads, as well as the temperature units." FontSize="24" FontFamily="Arial" VerticalAlignment="Top" Height="34" Width="1200"/>
         </Grid>
     </Grid>
 </Page>

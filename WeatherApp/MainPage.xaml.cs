@@ -43,5 +43,10 @@ namespace WeatherApp
             // Hide the grid
             MainContentGrid.Visibility = Visibility.Collapsed;
         }
+
+        private void FakeContent_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
