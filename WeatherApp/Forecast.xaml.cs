@@ -64,9 +64,12 @@ namespace WeatherApp
             DbManager dbManager = DbManager.getInstance();
             dbManager.insertMulti(forecast);
 
+            //List<WeatherData.Root> dataForcast = dbManager.selectForecast(Global_Variables.cityName);
+
             for (int i  = 0; i <= 4; i++)
             {
                 WeatherData.Root weather = forecast.list[i];
+                //WeatherData.Root weather = dataForcast[i];
                 List<TextBlock> blockList = selectTextBlock(i);
                 if(blockList != null)
                 {

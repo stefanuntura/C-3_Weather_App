@@ -561,6 +561,9 @@ namespace WeatherApp
 
                 using (SqlCommand command = conn.CreateCommand())
                 {
+
+                    Debug.WriteLine(start);
+                    Debug.WriteLine(end);
                     command.CommandText = "SELECT * FROM historical_weather WHERE timecode BETWEEN @now AND @then";
                     command.Parameters.AddWithValue("@now", start);
                     command.Parameters.AddWithValue("@then", end);
@@ -583,6 +586,10 @@ namespace WeatherApp
                         Trace.WriteLine(ex.ToString());
                     }
 
+                    foreach (WeatherHistoricalData.Root item in list)
+                    {
+                        Trace.WriteLine(item.main.ToString());
+                    }
                     return list;
                 }
             }

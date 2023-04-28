@@ -25,8 +25,8 @@ namespace WeatherApp
     /// </summary>
     public sealed partial class Historical : Page
     {
-        Object startDate;
-        Object endDate;
+        DateTimeOffset startDate;
+        DateTimeOffset endDate;
         List<WeatherHistoricalData.Root> weatherHistoricalData;
         SemaphoreSlim semaphoreSlim;
         public Historical()
@@ -41,11 +41,18 @@ namespace WeatherApp
 
         private async void EndDate_DateChanged(object sender, DatePickerValueChangedEventArgs e)
         {
-            endDate = Startdate.Date;
+            endDate = EndDate.Date;
 
-            if (startDate != null && startDate != endDate)
+            if (startDate != null && startDate < endDate)
             {
-                weatherHistoricalData = await Utilities.extractHistoricalWeatherData();
+                DbManager db = DbManager.getInstance();
+                int startTimestamp = (int)Utilities.unixTimeStampFromDate(startDate.DateTime);
+                int endTimestamp = (int)Utilities.unixTimeStampFromDate(endDate.DateTime);
+                weatherHistoricalData = db.selectHistoricalDataByDate(startTimestamp, endTimestamp);
+                foreach(WeatherHistoricalData.Root item in weatherHistoricalData)
+                {
+                    Debug.WriteLine(item.main.ToString());
+                }
 
                 // Synchronous collection itteration & table data population
                 // WARNING!!! Running method of popualting UI synchronously WILL crash your PC :)
@@ -61,10 +68,9 @@ namespace WeatherApp
                 {
                     semaphoreSlim = new SemaphoreSlim(15);
 
-                    for (int i = 0; i < weatherHistoricalData.Count - 176000; i++)
+                    for (int i = 0; i < weatherHistoricalData.Count; i++)
                     {
-                        Debug.WriteLine("Current obj index: " + i);
-                        Debug.WriteLine("Left to process: " + (weatherHistoricalData.Count - 176000 - i).ToString());
+                        Debug.WriteLine(i);
                         populateHistroicalDataTableAsync(i);
                     }
 
@@ -148,7 +154,7 @@ namespace WeatherApp
                 myStack.Children.Add(lv6);
 
                 // Add the new StackPanel as a ListViewItem control
-                HistoricalDataTable.Items.Insert(tableEntryIndex, myStack);
+                HistoricalDataTable.Items.Add(myStack);
             }
         }       
 
