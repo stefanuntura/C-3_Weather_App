@@ -19,8 +19,6 @@ namespace WeatherApp
         private DbManager()
         {
             connectionString = (App.Current as App).ConnectionString;
-            /*conn = new SqlConnection(connectionString);
-            conn.Open();*/
         }
 
 
@@ -35,7 +33,6 @@ namespace WeatherApp
 
 
         // Converts the retrieved data from the database into a WeatherData.Root object
-        //TO DO: save city value? 
         public WeatherData.Root convertSqlToObject(SqlDataReader reader)
         {
             Trace.WriteLine("SQLtoObject");
@@ -194,9 +191,9 @@ namespace WeatherApp
         //------------------------------------ REGULAR METHODS ------------------------------------
 
         //Insert for WeatherForecastData
-        public void insertSingle(List<WeatherData.Root> list)
+        public void insertSingle(WeatherForecastData list)
         {
-            foreach (var item in list)
+            foreach (var item in list.list)
             {
                 insertSingle(item);
             }
@@ -483,7 +480,6 @@ namespace WeatherApp
         //------------------------------------ HISTORICAL DATA METHODS (PLINQ) ------------------------------------
 
 
-        // TO DO: Rewrite all historical data stuff to fit new class structure
         public async void insertHistoricalData()
         {
             List<WeatherHistoricalData.Root> rootList = await Utilities.extractHistoricalWeatherData();
@@ -502,7 +498,6 @@ namespace WeatherApp
             });
         }
 
-        //TO DO: Update Historical Queries
         public void executeHistoricalInsert(WeatherHistoricalData.Root item, WeatherHistoricalData.Weather weather)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))

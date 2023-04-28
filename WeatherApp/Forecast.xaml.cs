@@ -7,7 +7,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
-// Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=234238 dokumentiert.
 
 namespace WeatherApp
 {
@@ -47,29 +46,23 @@ namespace WeatherApp
             }
         }
         
-        // TO DO: Add DB insert part
         private void populateDays(WeatherForecastData forecast)
-        {/*
+        {
             DbManager dbManager = DbManager.getInstance();
 
             if (Global_Variables.isMultiThreaded)
             {
-                dbManager.insertMulti(weatherForecastData);
+                dbManager.insertMulti(forecast);
             }
             else
             {
-                dbManager.insertSingle(weatherForecastData.list);
-            }*/
+                dbManager.insertSingle(forecast);
+            }
 
-            DbManager dbManager = DbManager.getInstance();
-            dbManager.insertMulti(forecast);
-
-            //List<WeatherData.Root> dataForcast = dbManager.selectForecast(Global_Variables.cityName);
 
             for (int i  = 0; i <= 4; i++)
             {
                 WeatherData.Root weather = forecast.list[i];
-                //WeatherData.Root weather = dataForcast[i];
                 List<TextBlock> blockList = selectTextBlock(i);
                 if(blockList != null)
                 {
