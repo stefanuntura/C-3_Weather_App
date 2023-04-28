@@ -1,0 +1,20 @@
+﻿<Page
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WeatherApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Custom="using:Windows.UI.Xaml.Controls.Maps"
+    x:Class="WeatherApp.MainPage"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <local:NavBar/>
+        <Grid x:Name="MainContentGrid" Margin="0,44,0,0">
+            <TextBlock HorizontalAlignment="Left" Margin="230,176,0,0" TextWrapping="Wrap" Text="Weather App - Threading" FontSize="88" FontFamily="Arial" FontWeight="Bold" VerticalAlignment="Top" Height="233" Width="1074"/>
+            <TextBlock HorizontalAlignment="Left" Margin="600,811,0,0" TextWrapping="Wrap" Text="Click any Tab to start!" FontSize="29" FontFamily="Arial" FontWeight="Bold" VerticalAlignment="Top" Height="34" Width="316"/>
+            <TextBlock HorizontalAlignment="Left" Margin="155,305,0,0" TextWrapping="Wrap" Text="You can use the Settings page to change between Single and Multiple threads, as well as the temperature units." FontSize="24" FontFamily="Arial" VerticalAlignment="Top" Height="34" Width="1200"/>
+        </Grid>
+    </Grid>
+</Page>
