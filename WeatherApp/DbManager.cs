@@ -550,7 +550,7 @@ namespace WeatherApp
             }
         }
 
-        public List<WeatherData.Root> selectHistoricalDataByDate(int start, int end)
+        public List<WeatherHistoricalData.Root> selectHistoricalDataByDate(int start, int end)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -561,11 +561,14 @@ namespace WeatherApp
 
                 using (SqlCommand command = conn.CreateCommand())
                 {
-                    command.CommandText = "SELECT * FROM historical_data WHERE timestamp BETWEEN @now AND @then";
+
+                    Debug.WriteLine(start);
+                    Debug.WriteLine(end);
+                    command.CommandText = "SELECT * FROM historical_weather WHERE timecode BETWEEN @now AND @then";
                     command.Parameters.AddWithValue("@now", start);
                     command.Parameters.AddWithValue("@then", end);
 
-                    List<WeatherData.Root> list = new List<WeatherData.Root>();
+                    List<WeatherHistoricalData.Root> list = new List<WeatherHistoricalData.Root>();
 
                     try
                     {
@@ -573,7 +576,7 @@ namespace WeatherApp
                         {
                             while (reader.Read())
                             {
-                                WeatherData.Root res = convertHistoricalSqlToObject(reader);
+                                WeatherHistoricalData.Root res = convertHistoricalSqlToObject(reader);
                                 list.Add(res);
                             }
                         }
@@ -583,82 +586,54 @@ namespace WeatherApp
                         Trace.WriteLine(ex.ToString());
                     }
 
-                    foreach (var item in list)
+                    foreach (WeatherHistoricalData.Root item in list)
                     {
-                        Trace.WriteLine(item.dt.ToString());
+                        Trace.WriteLine(item.main.ToString());
                     }
-
                     return list;
                 }
             }
         }
 
-        public WeatherData.Root convertHistoricalSqlToObject(SqlDataReader reader)
+        public WeatherHistoricalData.Root convertHistoricalSqlToObject(SqlDataReader reader)
         {
-            WeatherData.Root root = new WeatherData.Root();
-            root.main = new WeatherData.Main();
-            root.weather = new List<WeatherData.Weather>();
-            root.wind = new WeatherData.Wind();
-            WeatherData.Weather weatherObj = new WeatherData.Weather();
+            WeatherHistoricalData.Root root = new WeatherHistoricalData.Root();
+            root.main = new WeatherHistoricalData.Main();
+            root.weather = new List<WeatherHistoricalData.Weather>();
+            root.wind = new WeatherHistoricalData.Wind();
+            WeatherHistoricalData.Weather weatherObj = new WeatherHistoricalData.Weather();
 
 
             root.dt = reader.GetInt32(0);
-            root.main.temp = reader.GetDouble(1);
-
-            if (!reader.IsDBNull(2))
-            {
-                root.main.feels_like = reader.GetDouble(2);
-            }
 
             if (!reader.IsDBNull(3))
             {
-                root.main.pressure = reader.GetInt32(3);
-            }
-
-            if (!reader.IsDBNull(4))
-            {
-                root.main.humidity = reader.GetInt32(4);
+                weatherObj.description = reader.GetString(3);
             }
 
             if (!reader.IsDBNull(5))
             {
-                root.main.temp_min = reader.GetDouble(5);
+                root.main.temp = reader.GetDouble(5);
             }
 
             if (!reader.IsDBNull(6))
             {
-                root.main.temp_max = reader.GetDouble(6);
-            }
-
-            if (!reader.IsDBNull(7))
-            {
-                root.wind.speed = reader.GetDouble(7);
-            }
-
-            if (!reader.IsDBNull(8))
-            {
-                root.wind.deg = reader.GetInt32(8);
+                root.main.feels_like = reader.GetDouble(6);
             }
 
             if (!reader.IsDBNull(9))
             {
-                weatherObj.main = reader.GetString(9);
+                root.main.pressure = reader.GetInt32(9);
             }
 
             if (!reader.IsDBNull(10))
             {
-                weatherObj.description = reader.GetString(10);
+                root.main.humidity = reader.GetInt32(10);
             }
-
-            if (!reader.IsDBNull(11))
-            {
-                weatherObj.icon = reader.GetString(11);
-            }
-
 
             root.weather.Add(weatherObj);
 
-            Trace.WriteLine(root.ToString());
+            Trace.WriteLine(root.main.ToString());
             return root;
         }
     }

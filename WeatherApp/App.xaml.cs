@@ -47,8 +47,8 @@ namespace WeatherApp
         protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
             DbManager db = DbManager.getInstance();
-            await Task.Run(() => db.insertHistoricalData());
-            db.selectForecast("Teheran");
+            //await Task.Run(() => db.insertHistoricalData());
+            //db.selectHistoricalDataByDate(283996700, 284014800);
             Frame rootFrame = Window.Current.Content as Frame;
 
                 // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
