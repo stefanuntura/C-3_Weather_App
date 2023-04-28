@@ -1,7 +1,5 @@
 # C-3_Weather_App
 
-# C-3_Weather_App
-
 To ensure that the application runs as intended, there are some things that need to be set up beforehand. First the Database application requires the latest SQL Server and Visual Studio 2022 version to run. For this application SQLEXPRESS 2022 was used. Please follow the subsequent instructions:
 
 #### SQL Server Setup and database connection 
