@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Graphics.Canvas.Effects;
 
 namespace WeatherApp
 {
@@ -412,6 +413,8 @@ namespace WeatherApp
                     command.Parameters.AddWithValue("@sunset", item.sys != null ? item.sys.sunset : (object)DBNull.Value);
                     command.Parameters.AddWithValue("@sunrise", item.sys != null ? item.sys.sunrise : (object)DBNull.Value);
 
+
+
                     try
                     {
                         command.ExecuteNonQuery();
@@ -481,50 +484,62 @@ namespace WeatherApp
 
 
         // TO DO: Rewrite all historical data stuff to fit new class structure
-        /*public void insertHistoricalBulkMulti(WeatherHistoricalData data)
+        public async void insertHistoricalData()
+        {
+            List<WeatherHistoricalData.Root> rootList = await Utilities.extractHistoricalWeatherData();
+
+            rootList.AsParallel().ForAll(item =>
+            {
+                insertHistoricalBulkMulti(item);
+            });
+        }
+
+        public void insertHistoricalBulkMulti(WeatherHistoricalData.Root data)
         {
             data.weather.AsParallel().ForAll(item =>
             {
-                item.weather.AsParallel().ForAll(weather =>
-                {
-
-                });
+                executeHistoricalInsert(data, item);
             });
-        }*//*
-
-        //TO DO: Update Historical Queries
-        public void executeHistoricalInsert(WeatherData.Root item, WeatherData.Weather weather)
-        {
-            SqlCommand command = conn.CreateCommand();
-            command.CommandText = "INSERT INTO historical_data" +
-            "(timestamp, temp,  feels_like, pressure, humidity, temp_min, temp_max, wind_speed, wind_deg, main, description, icon) " +
-            "VALUES (@time, @temp,  @feels, @pressure, @humidity, @min, @max, @windSpeed, @windDirect,  @main, @description, @icon)";
-
-            command.Parameters.AddWithValue("@time", item.dt);
-            command.Parameters.AddWithValue("@temp", item.main.temp);
-            command.Parameters.AddWithValue("@pressure", item.main.pressure);
-            command.Parameters.AddWithValue("@humidity", item.main.humidity);
-            command.Parameters.AddWithValue("@feels", item.main.feels_like);
-            command.Parameters.AddWithValue("@min", item.main.temp_min);
-            command.Parameters.AddWithValue("@max", item.main.temp_max);
-            command.Parameters.AddWithValue("@windSpeed", item.wind.speed);
-            command.Parameters.AddWithValue("@windDirect", item.wind.deg);
-            command.Parameters.AddWithValue("@description", "joa"); //weather.description
-            command.Parameters.AddWithValue("@main", "ioefa"); //weather.main
-            command.Parameters.AddWithValue("@icon", "ihafio"); //weather.icon
-
-            try
-            {
-                command.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.ToString());
-            }
-
         }
 
-        *//*public void insertHistoricalBulk(List<WeatherData.Root> data)
+        //TO DO: Update Historical Queries
+        public void executeHistoricalInsert(WeatherHistoricalData.Root item, WeatherHistoricalData.Weather weather)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                if (conn != null)
+                {
+                    conn.Open();
+                }
+
+                using (SqlCommand command = conn.CreateCommand())
+                {
+                    command.CommandText = "INSERT INTO historical_weather" +
+                    "(timecode, description, temp, feels_like, pressure, humidity) " +
+                    "VALUES (@time, @description, @temp,  @feels, @pressure, @humidity)";
+
+                    command.Parameters.AddWithValue("@time", item.dt);
+                    command.Parameters.AddWithValue("@description", weather != null && !string.IsNullOrEmpty(weather.description) ? weather.description : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@temp", item.main != null ? item.main.temp : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@feels", item.main != null ? item.main.feels_like : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@pressure", item.main != null ? item.main.pressure : (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@humidity", item.main != null ? item.main.humidity : (object)DBNull.Value);
+
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex.ToString());
+                    }
+                }
+            }
+        }
+
+
+
+        public void insertHistoricalBulk(List<WeatherData.Root> data)
         {
             foreach (var item in data)
             {
@@ -533,39 +548,49 @@ namespace WeatherApp
                     executeInsertQuery(item, weather);
                 }
             }
-        }*//*
+        }
 
         public List<WeatherData.Root> selectHistoricalDataByDate(int start, int end)
         {
-            SqlCommand command = conn.CreateCommand();
-            command.CommandText = "SELECT * FROM historical_data WHERE timestamp BETWEEN @now AND @then";
-            command.Parameters.AddWithValue("@now", start);
-            command.Parameters.AddWithValue("@then", end);
-
-            List<WeatherData.Root> list = new List<WeatherData.Root>();
-
-            try
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                using (SqlDataReader reader = command.ExecuteReader())
+                if (conn != null)
                 {
-                    while (reader.Read())
+                    conn.Open();
+                }
+
+                using (SqlCommand command = conn.CreateCommand())
+                {
+                    command.CommandText = "SELECT * FROM historical_data WHERE timestamp BETWEEN @now AND @then";
+                    command.Parameters.AddWithValue("@now", start);
+                    command.Parameters.AddWithValue("@then", end);
+
+                    List<WeatherData.Root> list = new List<WeatherData.Root>();
+
+                    try
                     {
-                        WeatherData.Root res = convertHistoricalSqlToObject(reader);
-                        list.Add(res);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                WeatherData.Root res = convertHistoricalSqlToObject(reader);
+                                list.Add(res);
+                            }
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex.ToString());
+                    }
+
+                    foreach (var item in list)
+                    {
+                        Trace.WriteLine(item.dt.ToString());
+                    }
+
+                    return list;
                 }
             }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.ToString());
-            }
-
-            foreach (var item in list)
-            {
-                Trace.WriteLine(item.dt.ToString());
-            }
-
-            return list;
         }
 
         public WeatherData.Root convertHistoricalSqlToObject(SqlDataReader reader)
@@ -635,6 +660,6 @@ namespace WeatherApp
 
             Trace.WriteLine(root.ToString());
             return root;
-        }*/
+        }
     }
 }
