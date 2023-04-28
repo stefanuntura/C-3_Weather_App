@@ -12,9 +12,7 @@ using Windows.UI.Xaml.Controls.Maps;
 
 namespace WeatherApp
 {
-    /// <summary>
-    /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
-    /// </summary>
+    // Map class, has methods used in conjuction with the Map Control of UWP
     public sealed partial class Map : Page
     {
         private WeatherData.Root weatherData;
@@ -33,18 +31,37 @@ namespace WeatherApp
         {
             lock (Global_Variables.lockObj)
             {
-                SearchCity(Global_Variables.cityName);
+                if (Global_Variables.isMultiThreaded)
+                {
+                    SearchCity(Global_Variables.cityName);
+                }
+                else
+                {
+                    SearchCitySync(Global_Variables.cityName);
+                }
             }
         }
 
+        // After a user enters a city in the NavBar, this method is called after recieving a msg update
         private void OnSearchTermReceived(object recipient, NavSearch message)
         {
             lock (Global_Variables.lockObj)
             {
                 Global_Variables.cityName = message.SearchTerm;
-                SearchCity(Global_Variables.cityName);
+
+                if (Global_Variables.isMultiThreaded)
+                {
+                    SearchCity(Global_Variables.cityName);
+                }
+                else 
+                {
+                    SearchCitySync(Global_Variables.cityName);
+                }
+                
             }
         }
+
+        // Method to search for a city using async
         private async void SearchCity(string cityName)
         {
             lock (Global_Variables.lockObj)
@@ -83,25 +100,66 @@ namespace WeatherApp
                 MessageDialog dialog = new MessageDialog(errorMessage);
                 await dialog.ShowAsync();
             }
-
         }
+
+        //Sync method for searching city
+        private void SearchCitySync(string cityName)
+        {
+            lock (Global_Variables.lockObj)
+            {
+                Global_Variables.cityName = cityName;
+            }
+
+            weatherData = ApiCalls.fetchCurrentWeatherSync();
+
+            if (weatherData != null)
+            {
+
+                Geopoint cityLocation = new Geopoint(new BasicGeoposition { Latitude = weatherData.coord.lat, Longitude = weatherData.coord.lon });
+
+                // Center the MapControl to the city location
+                weatherMap.Center = cityLocation;
+                weatherMap.ZoomLevel = 12;
+
+                // Remove any existing MapIcons from the map
+                var existingPins = weatherMap.MapElements.Where(x => x is MapIcon).ToList();
+                foreach (var pin in existingPins)
+                {
+                    weatherMap.MapElements.Remove(pin);
+                }
+
+                // Add the MapIcon to the MapControl
+                weatherMap.MapElements.Add(GetMapIcon(cityLocation, cityName));
+
+                setLabels();
+
+            }
+            else
+            {
+                // Display an error message if the API request fails
+                string errorMessage = $"Could not retrieve weather information for {cityName}. Please check spelling or search a valid city.";
+                ContentDialog dialog = new ContentDialog()
+                {
+                    Title = "Error",
+                    Content = errorMessage,
+                    CloseButtonText = "OK"
+                };
+                // disregard the warning, There is apparently no sync method for showing a dialog box
+                dialog.ShowAsync();
+            }
+        }
+
+        // Method to set
         private void setLabels()
         {
             //sets labels
 
-            string weatherDescription = "";
-
-            foreach (var item in weatherData.weather)
-            {
-                weatherDescription = item.description;
-            }
-
-            // dateAndTimeNL.Text = Utilities.unixTimeStampToDate(weatherData.dt);
+            string weatherDescription = weatherData.weather[0].description;
 
             //temp
-            tempCurrentBox.Text = weatherData.main.temp.ToString().Substring(0, 1) + (Global_Variables.units == "metric" ? "°C" : "°F");
-            tempMinMaxBox.Text = weatherData.main.temp_min.ToString().Substring(0, 1) + " / " + weatherData.main.temp_max.ToString().Substring(0, 1) + (Global_Variables.units == "metric" ? "°C" : "°F");
-            tempFeelsLikeBox.Text = weatherData.main.feels_like.ToString().Substring(0, 1) + (Global_Variables.units == "metric" ? "°C" : "°F");
+            tempCurrentBox.Text = Math.Round(weatherData.main.temp).ToString() + (Global_Variables.units == "metric" ? "°C" : "°F");
+            tempMinMaxBox.Text = Math.Round(weatherData.main.temp_min).ToString() + (Global_Variables.units == "metric" ? "°C" : "°F") + " / " + Math.Round(weatherData.main.temp_max).ToString() + (Global_Variables.units == "metric" ? "°C" : "°F");
+            tempFeelsLikeBox.Text = Math.Round(weatherData.main.feels_like).ToString() + (Global_Variables.units == "metric" ? "°C" : "°F");
 
             //wind
             windSpeedBox.Text = weatherData.wind.speed.ToString() + " " + (Global_Variables.units == "metric" ? "m/s" : "mi/h");
@@ -120,12 +178,7 @@ namespace WeatherApp
 
         private MapIcon GetMapIcon(Geopoint cityLocation, string cityName)
         {
-            string weatherIcon = "";
-
-            foreach (var item in weatherData.weather)
-            {
-                weatherIcon = item.icon;
-            }
+            string weatherIcon = weatherData.weather[0].icon;
 
             // Create a new MapIcon to represent the city location and current weather conditions
             MapIcon mapIcon = new MapIcon

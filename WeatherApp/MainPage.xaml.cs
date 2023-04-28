@@ -26,9 +26,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace WeatherApp
 {
-    /// <summary>
-    /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
-    /// </summary>
+    // Main Page class of the application. Once a user leaves the main page, they don't navigate back towards it
     public sealed partial class MainPage : Page
     {
         private Stopwatch stopwatch;
@@ -36,6 +34,14 @@ namespace WeatherApp
         public MainPage()
         {
             this.InitializeComponent();
+            WeakReferenceMessenger.Default.Register<HidePageElements>(this, OnHidePageElementsMessageReceived);
+        }
+
+        //Method to be called when the HidePageElements class recieves an update
+        private void OnHidePageElementsMessageReceived(object recipient, HidePageElements message)
+        {
+            // Hide the grid
+            MainContentGrid.Visibility = Visibility.Collapsed;
         }
     }
 }

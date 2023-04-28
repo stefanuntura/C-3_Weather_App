@@ -9,6 +9,7 @@ using System.Diagnostics;
 
 namespace WeatherApp
 {
+    //Utility class, has methods that are used throughout the application
     internal static class Utilities
     {
         public static string prepareCurrentWeatherDataApiUrl()
@@ -22,20 +23,6 @@ namespace WeatherApp
         {
             string preparedUrl = String.Format(Constant_Variables.API_URL_FIVE_DAY_WEATHER_FORECAST_BY_LOCATION, Global_Variables.cityName, Constant_Variables.API_KEY, Global_Variables.units);
 
-            return preparedUrl;
-        }
-
-        public static string prepareHistoricalWeatherDataApiUrl()
-        {
-            string preparedUrl = String.Format(Constant_Variables.API_URL_HISTORICAL_WEATHER_BY_LOCATION, Global_Variables.cityName, "NL", Constant_Variables.API_KEY, 1616969735, 1648505735, Global_Variables.units);
-
-            return preparedUrl;
-        }
-
-        public static string prepareReverseGeoLocationApiUrl() 
-        {
-            string preparedUrl = String.Format(Constant_Variables.API_REVERSE_GEOLOCATION, Constant_Variables.API_KEY, Global_Variables.cityLat, Global_Variables.cityLon);
-            
             return preparedUrl;
         }
 
@@ -85,11 +72,6 @@ namespace WeatherApp
             }
 
             return uniqueDates;
-        }
-
-        public static Dictionary<string, int> extractNlProvinceFromCity() 
-        {
-            return JsonConvert.DeserializeObject<Dictionary<string, int>>(Constant_Variables.NL_PROVINCE_JSON);
         }
 
         public async static Task<List<WeatherHistoricalData.Root>> extractHistoricalWeatherData()

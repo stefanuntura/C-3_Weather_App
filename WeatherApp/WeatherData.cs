@@ -2,6 +2,7 @@
 
 namespace WeatherApp
 {
+    // Class that hold all the weather data from OpenWeatherMap
     public class WeatherData
     {
         public class Coord
