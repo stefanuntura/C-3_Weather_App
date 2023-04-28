@@ -11,9 +11,6 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace WeatherApp
 {
-    /// <summary>
-    /// Eine leere Seite, die eigenständig verwendet oder zu der innerhalb eines Rahmens navigiert werden kann.
-    /// </summary>
     public sealed partial class Forecast : Page
     {
         public Forecast()
@@ -64,7 +61,10 @@ namespace WeatherApp
                 dbManager.insertSingle(weatherForecastData.list);
             }*/
 
-            for(int i  = 0; i <= 4; i++)
+            DbManager dbManager = DbManager.getInstance();
+            dbManager.insertMulti(forecast);
+
+            for (int i  = 0; i <= 4; i++)
             {
                 WeatherData.Root weather = forecast.list[i];
                 List<TextBlock> blockList = selectTextBlock(i);
