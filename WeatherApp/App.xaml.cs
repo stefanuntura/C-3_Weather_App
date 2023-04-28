@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Contacts;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -26,6 +29,8 @@ namespace WeatherApp
         /// Initialisiert das Singletonanwendungsobjekt. Dies ist die erste Zeile von erstelltem Code
         /// und daher das logische Äquivalent von main() bzw. WinMain().
         /// </summary>
+        private string connectionString = @"Data Source=LAPTOP-9M0QVSK5\SQLEXPRESS01;Initial Catalog = WeatherDb; Integrated Security = SSPI";
+        public string ConnectionString { get => connectionString; set => connectionString = value; }
         public App()
         {
             this.InitializeComponent();
@@ -39,13 +44,16 @@ namespace WeatherApp
         /// werden z. B. verwendet, wenn die Anwendung gestartet wird, um eine bestimmte Datei zu öffnen.
         /// </summary>
         /// <param name="e">Details über Startanforderung und -prozess.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            DbManager db = DbManager.getInstance();
+            await Task.Run(() => db.insertHistoricalData());
+            db.selectForecast("Teheran");
             Frame rootFrame = Window.Current.Content as Frame;
 
-            // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
-            // Nur sicherstellen, dass das Fenster aktiv ist.
-            if (rootFrame == null)
+                // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
+                // Nur sicherstellen, dass das Fenster aktiv ist.
+                if (rootFrame == null)
             {
                 // Frame erstellen, der als Navigationskontext fungiert und zum Parameter der ersten Seite navigieren
                 rootFrame = new Frame();
