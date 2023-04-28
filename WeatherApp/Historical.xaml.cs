@@ -25,10 +25,11 @@ namespace WeatherApp
     /// </summary>
     public sealed partial class Historical : Page
     {
-        DateTimeOffset startDate;
-        DateTimeOffset endDate;
-        List<WeatherHistoricalData.Root> weatherHistoricalData;
-        SemaphoreSlim semaphoreSlim;
+        private DateTimeOffset startDate;
+        private DateTimeOffset endDate;
+        private List<WeatherHistoricalData.Root> weatherHistoricalData;
+        private SemaphoreSlim semaphoreSlim;
+
         public Historical()
         {
             this.InitializeComponent();
