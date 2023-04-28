@@ -49,13 +49,9 @@ namespace WeatherApp
                 int startTimestamp = (int)Utilities.unixTimeStampFromDate(startDate.DateTime);
                 int endTimestamp = (int)Utilities.unixTimeStampFromDate(endDate.DateTime);
                 weatherHistoricalData = db.selectHistoricalDataByDate(startTimestamp, endTimestamp);
-                foreach(WeatherHistoricalData.Root item in weatherHistoricalData)
-                {
-                    Debug.WriteLine(item.main.ToString());
-                }
 
                 // Synchronous collection itteration & table data population
-                // WARNING!!! Running method of popualting UI synchronously WILL crash your PC :)
+                // WARNING!!! Running method of popualting UI synchronously WILL crash your PC at max list size :)
                 if (!Global_Variables.isMultiThreaded)
                 {
                     for(int i = 0; i < weatherHistoricalData.Count; i++)
